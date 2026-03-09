@@ -208,8 +208,8 @@ input:focus { border-color: var(--accent); outline: none; }
     <div class="logo">ECLI<b>P</b>SO</div>
 
     <div class="toggle">
-      <button id="v1" class="active" type="button" data-version="v1" data-price="49">V1 ALUMINUM<br/>$49</button>
-      <button id="v2" type="button" data-version="v2" data-price="79">V2 TITANIUM<br/>$79</button>
+      <button id="v1" class="active" type="button" data-version="v1" data-price="1">V1 ALUMINUM<br/>$1</button>
+      <button id="v2" type="button" data-version="v2" data-price="1">V2 TITANIUM<br/>$1</button>
     </div>
 
     <div class="ring-area">
@@ -321,8 +321,8 @@ function setVersion(version, price) {
   document.getElementById("v2").classList.toggle("active", version === "v2");
 }
 
-document.getElementById("v1").addEventListener("click", () => setVersion("v1", "49"));
-document.getElementById("v2").addEventListener("click", () => setVersion("v2", "79"));
+document.getElementById("v1").addEventListener("click", () => setVersion("v1", "1"));
+document.getElementById("v2").addEventListener("click", () => setVersion("v2", "1"));
 
 function showError(text) {
   const error = document.getElementById("error");
