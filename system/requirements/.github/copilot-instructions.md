@@ -12,8 +12,8 @@ ECLIPSO is a pre-launch web system for an EDC (Everyday Carry) multitool product
 
 ## Current Implementation Status
 - ✅ `eclipso-landing.html`: Complete landing page with dark tactical design
-- ❌ `eclipso-payment.html`: Payment/reservation page (not implemented)
-- ❌ `eclipso-backend/`: Node.js API server (empty folder)
+- ✅ `eclipso-payment.html`: Payment/reservation page with Stripe integration
+- ✅ `eclipso-backend/`: Node.js + Express API server with Google Sheets & Stripe
 - 📋 `ECLIPSO_CODEX_PROMPT.md`: Complete build specifications
 
 ## Design System & Branding
@@ -88,16 +88,32 @@ async function safePost(url, payload) {
 - Email validation: `/^[^\s@]+@[^\s@]+\.[^\s@]+$/`
 
 ## Backend Integration Points
-**API Endpoints** (to implement):
-- `POST /api/subscribe` - Email capture with source tracking
-- `POST /api/preorder` - Reservation processing with Stripe integration
-- Google Sheets integration for lead storage
-- Stripe webhooks for payment confirmation
+**API Endpoints** (implemented in `eclipso-backend/server.js`):
+- `POST /signup` - Email capture from landing page with source tracking
+- `POST /create-payment-intent` - Create Stripe PaymentIntent, returns clientSecret
+- `POST /webhook` - Stripe webhook listener for `payment_intent.succeeded` events
+- `GET /admin/leads` - Retrieve all leads (requires `x-admin-secret` header)
+- `GET /admin/orders` - Retrieve all orders with revenue totals (requires `x-admin-secret` header)
+- `GET /health` - Health check endpoint
 
-**Environment Setup:**
-- `.env` file with API keys
-- Google Service Account credentials
-- Stripe webhook secrets
+**Price Configuration** (sync between backend and frontend):
+- V1 Aluminum: $49.00 (4900 cents)
+- V2 Titanium: $79.00 (7900 cents)
+- Update in `server.js` PRICE_MAP and `eclipso-payment.html` version buttons
+
+**Google Sheets Structure**:
+- `Leads` tab: Email | Source | Timestamp ISO | Timestamp PT
+- `Orders` tab: Email | Version | Amount | Currency | Stripe ID | Status | Timestamp ISO | Timestamp PT
+
+**Environment Setup** (`.env` in `eclipso-backend/`):
+- `STRIPE_SECRET_KEY`: Stripe secret key (sk_test_...)
+- `STRIPE_WEBHOOK_SECRET`: Webhook signing secret (whsec_...)
+- `GOOGLE_SHEET_ID`: Spreadsheet ID from URL
+- `GOOGLE_CLIENT_EMAIL`: Google Service Account email
+- `GOOGLE_PRIVATE_KEY`: Private key with newlines as `\n` escape sequences
+- `ALLOWED_ORIGIN`: Frontend domain for CORS
+- `ADMIN_SECRET`: Secret token for admin endpoints
+- `PORT`: Server port (default 3001)
 
 ## Deployment & Production
 **Frontend (Netlify):**
@@ -112,8 +128,11 @@ async function safePost(url, payload) {
 
 ## Key Files to Reference
 - `ECLIPSO_CODEX_PROMPT.md`: Complete specifications and design details
-- `eclipso-landing.html`: Exemplar implementation with inline styles
-- `script.js`: Form handling and API integration patterns
+- `eclipso-landing.html`: Landing page with hero, animations, email capture
+- `eclipso-payment.html`: Payment page with version selector, Stripe card element
+- `eclipso-backend/server.js`: Express API with Stripe + Google Sheets integration
+- `eclipso-backend/README.md`: Setup guide for Google Sheets, Stripe, and deployment
+- `.github/copilot-instructions.md`: This file
 
 ## Common Pitfalls to Avoid
 - Don't use frameworks or build tools - keep vanilla HTML/CSS/JS

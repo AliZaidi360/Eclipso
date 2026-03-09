@@ -1,0 +1,410 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ECLIPSO | Reserve</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;500;700&display=swap" rel="stylesheet" />
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+:root {
+  --black: #070708;
+  --deep: #0d0d0f;
+  --carbon: #141417;
+  --iron: #1e1e23;
+  --steel: #2e2e36;
+  --ash: #6a6a78;
+  --silver: #b0b0be;
+  --light: #e8e8f0;
+  --white: #f4f4f8;
+  --accent: #e8c44a;
+  --green: #2ecc71;
+  --red: #e74c3c;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; }
+body {
+  cursor: crosshair;
+  min-height: 100vh;
+  background: var(--black);
+  color: var(--light);
+  font-family: "Barlow Condensed", sans-serif;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
+}
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+.left {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  border-right: 1px solid var(--steel);
+  padding: 2rem;
+  background: linear-gradient(160deg, #131317, #0a0a0c);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.back {
+  font-family: "DM Mono", monospace;
+  font-size: 0.78rem;
+  color: var(--silver);
+  text-decoration: none;
+}
+.logo { font-family: "Bebas Neue", sans-serif; font-size: 2.2rem; letter-spacing: 0.08em; }
+.logo b { color: var(--accent); font-weight: 400; }
+.toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--steel);
+}
+.toggle button {
+  appearance: none;
+  border: 0;
+  background: var(--carbon);
+  color: var(--silver);
+  padding: 0.9rem 0.6rem;
+  font-family: "DM Mono", monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  border-top: 2px solid transparent;
+  cursor: pointer;
+}
+.toggle button.active {
+  color: var(--light);
+  border-top-color: var(--accent);
+  background: #1b1b21;
+}
+.ring-area { position: relative; width: 280px; height: 280px; margin: 0.8rem auto 0.4rem; display: grid; place-items: center; }
+.ring { position: absolute; border: 1px solid var(--steel); border-radius: 50% !important; }
+.outer { width: 280px; height: 280px; animation: spin 20s linear infinite; }
+.mid { width: 210px; height: 210px; animation: spinr 14s linear infinite; }
+.inner { width: 156px; height: 156px; animation: spin 8s linear infinite; }
+.outer::before { content:""; position: absolute; top: -4px; left: 50%; width: 8px; height: 8px; background: var(--accent); transform: translateX(-50%); }
+.core { width: 104px; height: 104px; border-radius: 50% !important; border: 1px solid var(--steel); background: #121216; display: grid; place-items: center; }
+@keyframes spin { to { transform: rotate(360deg);} }
+@keyframes spinr { to { transform: rotate(-360deg);} }
+.list-title { font-family: "DM Mono", monospace; font-size: 0.74rem; color: var(--silver); letter-spacing: 0.07em; }
+ul { padding-left: 1.1rem; color: var(--silver); display: grid; gap: 0.34rem; }
+.summary {
+  margin-top: auto;
+  border-top: 1px solid var(--steel);
+  padding-top: 1rem;
+  font-family: "DM Mono", monospace;
+  font-size: 0.78rem;
+}
+.summary .row { display: flex; justify-content: space-between; margin-bottom: 0.45rem; color: var(--silver); }
+.summary .total {
+  display: flex; justify-content: space-between; align-items: end;
+  border-top: 1px solid var(--steel); padding-top: 0.6rem; margin-top: 0.5rem;
+}
+.summary .amount { font-family: "Bebas Neue", sans-serif; font-size: 2.5rem; line-height: 1; color: var(--accent); }
+.right {
+  padding: 3rem 2.3rem;
+  overflow-y: auto;
+}
+.eyebrow { font-family: "DM Mono", monospace; color: var(--silver); font-size: 0.8rem; }
+h1 { margin-top: 0.6rem; font-family: "Bebas Neue", sans-serif; font-size: clamp(2.8rem, 8vw, 5.3rem); line-height: 0.9; }
+.subtitle { margin-top: 0.6rem; color: var(--silver); max-width: 46ch; }
+form { margin-top: 1.5rem; display: grid; gap: 0.85rem; max-width: 560px; }
+label { font-family: "DM Mono", monospace; font-size: 0.74rem; color: var(--silver); text-transform: uppercase; letter-spacing: 0.05em; }
+input, #card-element {
+  margin-top: 0.33rem;
+  width: 100%;
+  padding: 0.86rem;
+  border: 1px solid var(--steel);
+  background: var(--iron);
+  color: var(--light);
+  font-family: "DM Mono", monospace;
+  font-size: 0.88rem;
+}
+input:focus { border-color: var(--accent); outline: none; }
+#error {
+  min-height: 46px;
+  border: 1px solid transparent;
+  color: var(--red);
+  font-family: "DM Mono", monospace;
+  font-size: 0.78rem;
+  padding: 0.7rem;
+}
+#error.show { border-color: var(--red); background: rgba(231,76,60,0.08); }
+#submit {
+  margin-top: 0.3rem;
+  appearance: none;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--black);
+  font-family: "DM Mono", monospace;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 0.93rem;
+  cursor: pointer;
+}
+#submit[disabled] { opacity: 0.6; cursor: wait; }
+.security {
+  margin-top: 0.7rem;
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  color: var(--silver);
+  font-family: "DM Mono", monospace;
+  font-size: 0.72rem;
+}
+#success {
+  display: none;
+  border: 1px solid var(--steel);
+  margin-top: 1.1rem;
+  padding: 1rem;
+  max-width: 560px;
+}
+.check {
+  width: 54px;
+  height: 54px;
+  border: 1px solid var(--green);
+  color: var(--green);
+  display: grid;
+  place-items: center;
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+  animation: pop 0.6s ease;
+}
+@keyframes pop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1;} }
+#success h2 { font-family: "Bebas Neue", sans-serif; font-size: 3rem; color: var(--green); }
+#order-id { font-family: "DM Mono", monospace; color: var(--accent); margin-top: 0.5rem; }
+#success a { color: var(--accent); display: inline-block; margin-top: 0.8rem; font-family: "DM Mono", monospace; }
+.spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(7,7,8,0.4);
+  border-top-color: var(--black);
+  display: inline-block;
+  margin-right: 0.4rem;
+  animation: spin 0.8s linear infinite;
+}
+@media (max-width: 990px) {
+  .layout { grid-template-columns: 1fr; }
+  .left { position: static; height: auto; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="left">
+    <a class="back" href="eclipso-landing.html"><- BACK TO ECLIPSO</a>
+    <div class="logo">ECLI<b>P</b>SO</div>
+
+    <div class="toggle">
+      <button id="v1" class="active" type="button" data-version="v1" data-price="49">V1 ALUMINUM<br/>$49</button>
+      <button id="v2" type="button" data-version="v2" data-price="79">V2 TITANIUM<br/>$79</button>
+    </div>
+
+    <div class="ring-area">
+      <div class="ring outer"></div>
+      <div class="ring mid"></div>
+      <div class="ring inner"></div>
+      <div class="core">
+        <svg width="56" height="56" viewBox="0 0 72 72" fill="none" stroke="#e8c44a" stroke-width="2">
+          <circle cx="36" cy="36" r="7" />
+          <path d="M36 11 L40 24 L32 24 Z" />
+          <path d="M36 61 L41 49 L31 49 Z" />
+          <path d="M61 36 L49 40 L49 31 Z" />
+          <path d="M11 36 L23 41 L23 31 Z" />
+          <circle cx="36" cy="7" r="4" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="list-title">// WHAT YOU GET</div>
+    <ul>
+      <li>Eclipso EDC Multitool (chosen build)</li>
+      <li>Blade - Bottle Opener - Wire Cutter</li>
+      <li>Screwdriver/Pry - Box Opener</li>
+      <li>First production run - ships before retail</li>
+      <li>Backer-exclusive early bird pricing</li>
+      <li>Email updates through Kickstarter launch</li>
+    </ul>
+
+    <div class="summary">
+      <div class="row"><span>Unit price</span><span id="unit">$49.00</span></div>
+      <div class="row"><span>Shipping</span><span>Calculated at launch</span></div>
+      <div class="total"><span>Total today</span><span class="amount" id="total">$49</span></div>
+    </div>
+  </aside>
+
+  <main class="right">
+    <div class="eyebrow">// SECURE PRE-ORDER</div>
+    <h1>RESERVE YOURS.</h1>
+    <p class="subtitle">Lock your early bird pricing now. Payment is securely processed by Stripe.</p>
+
+    <form id="checkout-form" novalidate>
+      <label>Email Address<input id="email" type="email" required /></label>
+      <label>Full Name<input id="name" type="text" required /></label>
+      <label>Card Details<div id="card-element"></div></label>
+
+      <div id="error"></div>
+      <button id="submit" type="submit">RESERVE FOR $49</button>
+
+      <div class="security">
+        <span>SSL Secured</span>
+        <span>Powered by Stripe</span>
+        <span>No hidden fees</span>
+      </div>
+    </form>
+
+    <section id="success">
+      <div class="check">✓</div>
+      <h2>YOU'RE IN.</h2>
+      <p>Your reservation is confirmed. A receipt has been emailed to you.</p>
+      <p id="order-id"></p>
+      <a href="eclipso-landing.html">Back to Eclipso</a>
+    </section>
+  </main>
+</div>
+
+<script>
+const STRIPE_PK = "pk_test_YOUR_PUBLISHABLE_KEY";
+const BACKEND_URL = "http://localhost:3001";
+
+let selectedVersion = "v1";
+let selectedPrice = 49;
+
+const stripe = Stripe(STRIPE_PK);
+const elements = stripe.elements({
+  appearance: {
+    theme: "night",
+    variables: {
+      colorPrimary: "#e8c44a",
+      colorBackground: "#1e1e23",
+      colorText: "#e8e8f0",
+      fontFamily: '"DM Mono", monospace',
+      borderRadius: "0px"
+    }
+  }
+});
+
+const card = elements.create("card", {
+  style: {
+    base: {
+      color: "#e8e8f0",
+      fontFamily: '"DM Mono", monospace',
+      fontSize: "14px",
+      iconColor: "#e8c44a",
+      "::placeholder": { color: "#6a6a78" }
+    }
+  }
+});
+card.mount("#card-element");
+
+function setVersion(version, price) {
+  selectedVersion = version;
+  selectedPrice = parseInt(price);
+  const priceStr = `$${selectedPrice}.00`;
+  const shortStr = `$${selectedPrice}`;
+  document.getElementById("unit").textContent = priceStr;
+  document.getElementById("total").textContent = shortStr;
+  document.getElementById("submit").textContent = `RESERVE FOR ${shortStr}`;
+  document.getElementById("v1").classList.toggle("active", version === "v1");
+  document.getElementById("v2").classList.toggle("active", version === "v2");
+}
+
+document.getElementById("v1").addEventListener("click", () => setVersion("v1", "49"));
+document.getElementById("v2").addEventListener("click", () => setVersion("v2", "79"));
+
+function showError(text) {
+  const error = document.getElementById("error");
+  error.textContent = text || "";
+  error.classList.toggle("show", Boolean(text));
+}
+
+function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+function setLoading(state) {
+  const btn = document.getElementById("submit");
+  if (state) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>PROCESSING';
+  } else {
+    btn.disabled = false;
+    btn.textContent = `RESERVE FOR $${selectedPrice}`;
+  }
+}
+
+document.getElementById("checkout-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  showError("");
+
+  const email = document.getElementById("email").value.trim();
+  const name = document.getElementById("name").value.trim();
+
+  if (!validEmail(email)) {
+    showError("Please enter a valid email address.");
+    return;
+  }
+  if (!name) {
+    showError("Please enter your full name.");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const intentRes = await fetch(`${BACKEND_URL}/create-payment-intent`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        version: selectedVersion, 
+        email,
+        name,
+        amount: selectedPrice * 100
+      })
+    });
+
+    if (!intentRes.ok) {
+      const err = await intentRes.json().catch(() => ({}));
+      throw new Error(err.error || "Unable to initialize payment.");
+    }
+
+    const { clientSecret } = await intentRes.json();
+
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card,
+        billing_details: { name, email }
+      }
+    });
+
+    if (result.error) throw new Error(result.error.message || "Payment failed.");
+
+    if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
+      const id = result.paymentIntent.id || "";
+      const shortId = id.slice(-8).toUpperCase();
+      document.getElementById("checkout-form").style.display = "none";
+      document.getElementById("order-id").textContent = `ORDER ID: ${shortId}`;
+      document.getElementById("success").style.display = "block";
+    } else {
+      throw new Error("Payment did not complete.");
+    }
+  } catch (err) {
+    showError(err.message || "Unable to process payment.");
+  } finally {
+    setLoading(false);
+  }
+});
+</script>
+</body>
+</html>
+
