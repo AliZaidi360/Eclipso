@@ -239,9 +239,9 @@ input:focus { border-color: var(--accent); outline: none; }
     </ul>
 
     <div class="summary">
-      <div class="row"><span>Unit price</span><span id="unit">$49.00</span></div>
+      <div class="row"><span>Reservation fee</span><span id="unit">$1.00</span></div>
       <div class="row"><span>Shipping</span><span>Calculated at launch</span></div>
-      <div class="total"><span>Total today</span><span class="amount" id="total">$49</span></div>
+      <div class="total"><span>Total today</span><span class="amount" id="total">$1</span></div>
     </div>
   </aside>
 
@@ -256,7 +256,7 @@ input:focus { border-color: var(--accent); outline: none; }
       <label>Card Details<div id="card-element"></div></label>
 
       <div id="error"></div>
-      <button id="submit" type="submit">RESERVE FOR $49</button>
+      <button id="submit" type="submit">RESERVE FOR $1</button>
 
       <div class="security">
         <span>SSL Secured</span>
@@ -279,8 +279,15 @@ input:focus { border-color: var(--accent); outline: none; }
 const STRIPE_PK = "pk_test_51TDudBLcBs0EYr3pMmeH9JB15lqZ7EMBPMfnGJxH08MOwpDQxRPtNNJLyW7cQV7XsEJ1ZxoONG0BPRSebUh4Vaqq00WPTZ7ooc";
 const BACKEND_URL = "https://eclipso-production.up.railway.app";
 
+window.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("email")) {
+    document.getElementById("email").value = params.get("email");
+  }
+});
+
 let selectedVersion = "v1";
-let selectedPrice = 49;
+let selectedPrice = 1;
 
 const stripe = Stripe(STRIPE_PK);
 const elements = stripe.elements({

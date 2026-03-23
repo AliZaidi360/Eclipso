@@ -344,7 +344,7 @@ a { color: inherit; text-decoration: none; }
   <div class="wrapper nav-inner">
     <a class="logo" href="#">ECLI<b>P</b>SO</a>
     <div class="nav-center">// PRE-LAUNCH - KICKSTARTER COMING SOON</div>
-    <a class="btn" href="#notify">NOTIFY ME</a>
+    <a class="btn" href="#notify">RESERVE NOW</a>
   </div>
 </nav>
 
@@ -454,7 +454,7 @@ a { color: inherit; text-decoration: none; }
 
     <form id="notify-form" novalidate>
       <input id="email" name="email" type="email" placeholder="ENTER EMAIL" required />
-      <button class="btn" type="submit">NOTIFY ME</button>
+      <button class="btn" type="submit">RESERVE NOW</button>
     </form>
     <div class="note">No spam. One email when we launch.</div>
     <div id="notify-msg"></div>
@@ -522,9 +522,9 @@ document.getElementById("notify-form").addEventListener("submit", async (e) => {
     });
 
     if (!res.ok) throw new Error("Request failed");
-    msg.style.color = "var(--green)";
-    msg.textContent = "✓ YOU'RE ON THE LIST.";
-    e.target.reset();
+    msg.style.color = "var(--silver)";
+    msg.textContent = "Taking you to checkout...";
+    window.location.href = `eclipso-payment.html?email=${encodeURIComponent(email)}`;
   } catch (err) {
     msg.style.color = "var(--red)";
     msg.textContent = "Unable to submit right now. Please try again.";
