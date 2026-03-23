@@ -1,10 +1,10 @@
-﻿require("dotenv").config();
+require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const Stripe = require("stripe");
-const { google } = require("googleapis");
+const { Pool } = require("pg");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -21,9 +21,7 @@ const PRICE_MAP = {
 const REQUIRED_ENVS = [
   "STRIPE_SECRET_KEY",
   "STRIPE_WEBHOOK_SECRET",
-  "GOOGLE_SHEET_ID",
-  "GOOGLE_CLIENT_EMAIL",
-  "GOOGLE_PRIVATE_KEY",
+  "DATABASE_URL",
   "ADMIN_SECRET"
 ];
 
@@ -33,17 +31,42 @@ for (const key of REQUIRED_ENVS) {
   }
 }
 
-const auth = new google.auth.GoogleAuth({
-  credentials: {
-    client_email: process.env.GOOGLE_CLIENT_EMAIL,
-    private_key: process.env.GOOGLE_PRIVATE_KEY
-      ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n")
-      : undefined
-  },
-  scopes: ["https://www.googleapis.com/auth/spreadsheets"]
+// Set up Postgres connection pool
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
 });
 
-const sheets = google.sheets({ version: "v4", auth });
+// Create tables if they don't exist
+async function initDB() {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS leads (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        source VARCHAR(50),
+        signed_up_iso VARCHAR(50),
+        signed_up_pt VARCHAR(50)
+      );
+    `);
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS orders (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) NOT NULL,
+        version VARCHAR(50),
+        amount_label VARCHAR(50),
+        currency VARCHAR(10),
+        stripe_id VARCHAR(100) UNIQUE NOT NULL,
+        status VARCHAR(50),
+        created_iso VARCHAR(50),
+        created_pt VARCHAR(50)
+      );
+    `);
+    console.log("Database tables initialized.");
+  } catch (err) {
+    console.error("Failed to initialize database tables:", err);
+  }
+}
+initDB();
 
 function nowPT() {
   return new Intl.DateTimeFormat("en-US", {
@@ -60,33 +83,6 @@ function nowPT() {
 
 function isEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value || "");
-}
-
-async function getRows(tab) {
-  const range = `${tab}!A2:Z`;
-  const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: process.env.GOOGLE_SHEET_ID,
-    range
-  });
-  return res.data.values || [];
-}
-
-async function appendRow(tab, row) {
-  const range = `${tab}!A:Z`;
-  await sheets.spreadsheets.values.append({
-    spreadsheetId: process.env.GOOGLE_SHEET_ID,
-    range,
-    valueInputOption: "USER_ENTERED",
-    requestBody: {
-      values: [row]
-    }
-  });
-}
-
-async function emailExists(tab, email) {
-  const rows = await getRows(tab);
-  const target = String(email || "").trim().toLowerCase();
-  return rows.some((r) => String(r[0] || "").trim().toLowerCase() === target);
 }
 
 function requireAdmin(req, res, next) {
@@ -128,19 +124,16 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
       const nowISO = new Date().toISOString();
       const tsPT = nowPT();
 
-      await appendRow("Orders", [
-        email,
-        version,
-        amountLabel,
-        intent.currency || "usd",
-        intent.id,
-        intent.status,
-        nowISO,
-        tsPT
-      ]);
+      await pool.query(
+        "INSERT INTO orders (email, version, amount_label, currency, stripe_id, status, created_iso, created_pt) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (stripe_id) DO NOTHING",
+        [email, version, amountLabel, intent.currency || "usd", intent.id, intent.status, nowISO, tsPT]
+      );
 
-      if (email && !(await emailExists("Leads", email))) {
-        await appendRow("Leads", [email, "preorder", nowISO, tsPT]);
+      if (email) {
+        await pool.query(
+          "INSERT INTO leads (email, source, signed_up_iso, signed_up_pt) VALUES ($1, $2, $3, $4) ON CONFLICT (email) DO NOTHING",
+          [email, "preorder", nowISO, tsPT]
+        );
       }
 
       console.log(`Order saved: ${email} - ${version} - ${amountLabel}`);
@@ -164,11 +157,11 @@ app.post("/signup", async (req, res) => {
       return res.status(400).json({ success: false, error: "Invalid email" });
     }
 
-    const exists = await emailExists("Leads", email);
-    if (!exists) {
-      const nowISO = new Date().toISOString();
-      await appendRow("Leads", [email, source, nowISO, nowPT()]);
-    }
+    const nowISO = new Date().toISOString();
+    await pool.query(
+      "INSERT INTO leads (email, source, signed_up_iso, signed_up_pt) VALUES ($1, $2, $3, $4) ON CONFLICT (email) DO NOTHING",
+      [email, source, nowISO, nowPT()]
+    );
 
     return res.json({ success: true, message: "You're on the list." });
   } catch (err) {
@@ -210,11 +203,11 @@ app.post("/create-payment-intent", async (req, res) => {
 
 app.get("/admin/leads", requireAdmin, async (req, res) => {
   try {
-    const rows = await getRows("Leads");
+    const { rows } = await pool.query("SELECT * FROM leads ORDER BY id DESC");
     const leads = rows.map((r) => ({
-      email: r[0] || "",
-      source: r[1] || "",
-      signed_up: r[2] || ""
+      email: r.email || "",
+      source: r.source || "",
+      signed_up: r.signed_up_iso || ""
     }));
 
     return res.json({ count: leads.length, leads });
@@ -226,14 +219,14 @@ app.get("/admin/leads", requireAdmin, async (req, res) => {
 
 app.get("/admin/orders", requireAdmin, async (req, res) => {
   try {
-    const rows = await getRows("Orders");
+    const { rows } = await pool.query("SELECT * FROM orders ORDER BY id DESC");
     const orders = rows.map((r) => ({
-      email: r[0] || "",
-      version: r[1] || "",
-      amount: r[2] || "",
-      stripe_id: r[4] || "",
-      status: r[5] || "",
-      created: r[6] || ""
+      email: r.email || "",
+      version: r.version || "",
+      amount: r.amount_label || "",
+      stripe_id: r.stripe_id || "",
+      status: r.status || "",
+      created: r.created_iso || ""
     }));
 
     const total = orders.reduce((sum, o) => {
