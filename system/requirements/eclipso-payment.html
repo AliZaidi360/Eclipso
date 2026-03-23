@@ -208,8 +208,8 @@ input:focus { border-color: var(--accent); outline: none; }
     <div class="logo">ECLI<b>P</b>SO</div>
 
     <div class="toggle">
-      <button id="v1" class="active" type="button" data-version="v1" data-price="1">V1 ALUMINUM<br/>$1</button>
-      <button id="v2" type="button" data-version="v2" data-price="1">V2 TITANIUM<br/>$1</button>
+      <button id="v1" class="active" type="button" data-version="v1" data-price="1.99">V1 ALUMINUM<br/>$1.99</button>
+      <button id="v2" type="button" data-version="v2" data-price="1.99">V2 TITANIUM<br/>$1.99</button>
     </div>
 
     <div class="ring-area">
@@ -239,9 +239,9 @@ input:focus { border-color: var(--accent); outline: none; }
     </ul>
 
     <div class="summary">
-      <div class="row"><span>Reservation fee</span><span id="unit">$1.00</span></div>
+      <div class="row"><span>Reservation fee</span><span id="unit">$1.99</span></div>
       <div class="row"><span>Shipping</span><span>Calculated at launch</span></div>
-      <div class="total"><span>Total today</span><span class="amount" id="total">$1</span></div>
+      <div class="total"><span>Total today</span><span class="amount" id="total">$1.99</span></div>
     </div>
   </aside>
 
@@ -252,11 +252,12 @@ input:focus { border-color: var(--accent); outline: none; }
 
     <form id="checkout-form" novalidate>
       <label>Email Address<input id="email" type="email" required /></label>
+      <label>Mobile Number (SMS)<input id="phone" type="tel" /></label>
       <label>Full Name<input id="name" type="text" required /></label>
       <label>Card Details<div id="card-element"></div></label>
 
       <div id="error"></div>
-      <button id="submit" type="submit">RESERVE FOR $1</button>
+      <button id="submit" type="submit">RESERVE FOR $1.99</button>
 
       <div class="security">
         <span>SSL Secured</span>
@@ -284,10 +285,13 @@ window.addEventListener("DOMContentLoaded", () => {
   if (params.get("email")) {
     document.getElementById("email").value = params.get("email");
   }
+  if (params.get("phone")) {
+    document.getElementById("phone").value = params.get("phone");
+  }
 });
 
 let selectedVersion = "v1";
-let selectedPrice = 1;
+let selectedPrice = 1.99;
 
 const stripe = Stripe(STRIPE_PK);
 const elements = stripe.elements({
@@ -318,18 +322,17 @@ card.mount("#card-element");
 
 function setVersion(version, price) {
   selectedVersion = version;
-  selectedPrice = parseInt(price);
-  const priceStr = `$${selectedPrice}.00`;
-  const shortStr = `$${selectedPrice}`;
+  selectedPrice = parseFloat(price);
+  const priceStr = `$${selectedPrice}`;
   document.getElementById("unit").textContent = priceStr;
-  document.getElementById("total").textContent = shortStr;
-  document.getElementById("submit").textContent = `RESERVE FOR ${shortStr}`;
+  document.getElementById("total").textContent = priceStr;
+  document.getElementById("submit").textContent = `RESERVE FOR ${priceStr}`;
   document.getElementById("v1").classList.toggle("active", version === "v1");
   document.getElementById("v2").classList.toggle("active", version === "v2");
 }
 
-document.getElementById("v1").addEventListener("click", () => setVersion("v1", "1"));
-document.getElementById("v2").addEventListener("click", () => setVersion("v2", "1"));
+document.getElementById("v1").addEventListener("click", () => setVersion("v1", "1.99"));
+document.getElementById("v2").addEventListener("click", () => setVersion("v2", "1.99"));
 
 function showError(text) {
   const error = document.getElementById("error");
@@ -355,6 +358,7 @@ document.getElementById("checkout-form").addEventListener("submit", async (e) =>
   showError("");
 
   const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
   const name = document.getElementById("name").value.trim();
 
   if (!validEmail(email)) {
@@ -375,8 +379,9 @@ document.getElementById("checkout-form").addEventListener("submit", async (e) =>
       body: JSON.stringify({ 
         version: selectedVersion, 
         email,
+        phone,
         name,
-        amount: selectedPrice * 100
+        amount: Math.round(selectedPrice * 100)
       })
     });
 

@@ -14,8 +14,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
 });
 
 const PRICE_MAP = {
-  v1: { cents: 100, label: "$1.00" },
-  v2: { cents: 100, label: "$1.00" }
+  v1: { cents: 199, label: "$1.99" },
+  v2: { cents: 199, label: "$1.99" }
 };
 
 const REQUIRED_ENVS = [
@@ -61,6 +61,11 @@ async function initDB() {
         created_pt VARCHAR(50)
       );
     `);
+
+    await pool.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS phone VARCHAR(255);`).catch(e => console.log(e.message));
+    await pool.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS phone VARCHAR(255);`).catch(e => console.log(e.message));
+    await pool.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS name VARCHAR(255);`).catch(e => console.log(e.message));
+
     console.log("Database tables initialized.");
   } catch (err) {
     console.error("Failed to initialize database tables:", err);
@@ -119,20 +124,22 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
       const intent = event.data.object;
       const email = intent.metadata?.email || intent.receipt_email || "";
       const version = intent.metadata?.version || "unknown";
+      const name = intent.metadata?.name || "";
+      const phone = intent.metadata?.phone || "";
       const amount = typeof intent.amount_received === "number" ? intent.amount_received : intent.amount;
       const amountLabel = `$${(amount / 100).toFixed(2)}`;
       const nowISO = new Date().toISOString();
       const tsPT = nowPT();
 
       await pool.query(
-        "INSERT INTO orders (email, version, amount_label, currency, stripe_id, status, created_iso, created_pt) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT (stripe_id) DO NOTHING",
-        [email, version, amountLabel, intent.currency || "usd", intent.id, intent.status, nowISO, tsPT]
+        "INSERT INTO orders (email, version, amount_label, currency, stripe_id, status, created_iso, created_pt, name, phone) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) ON CONFLICT (stripe_id) DO NOTHING",
+        [email, version, amountLabel, intent.currency || "usd", intent.id, intent.status, nowISO, tsPT, name, phone]
       );
 
       if (email) {
         await pool.query(
-          "INSERT INTO leads (email, source, signed_up_iso, signed_up_pt) VALUES ($1, $2, $3, $4) ON CONFLICT (email) DO NOTHING",
-          [email, "preorder", nowISO, tsPT]
+          "INSERT INTO leads (email, source, signed_up_iso, signed_up_pt, phone) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (email) DO UPDATE SET phone = EXCLUDED.phone",
+          [email, "preorder", nowISO, tsPT, phone]
         );
       }
 
@@ -151,6 +158,7 @@ app.use(express.json());
 app.post("/signup", async (req, res) => {
   try {
     const email = String(req.body?.email || "").trim().toLowerCase();
+    const phone = String(req.body?.phone || "").trim();
     const source = String(req.body?.source || "landing").trim();
 
     if (!isEmail(email)) {
@@ -159,8 +167,8 @@ app.post("/signup", async (req, res) => {
 
     const nowISO = new Date().toISOString();
     await pool.query(
-      "INSERT INTO leads (email, source, signed_up_iso, signed_up_pt) VALUES ($1, $2, $3, $4) ON CONFLICT (email) DO NOTHING",
-      [email, source, nowISO, nowPT()]
+      "INSERT INTO leads (email, source, signed_up_iso, signed_up_pt, phone) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (email) DO UPDATE SET phone = EXCLUDED.phone",
+      [email, source, nowISO, nowPT(), phone]
     );
 
     return res.json({ success: true, message: "You're on the list." });
@@ -174,6 +182,8 @@ app.post("/create-payment-intent", async (req, res) => {
   try {
     const version = String(req.body?.version || "").trim().toLowerCase();
     const email = String(req.body?.email || "").trim().toLowerCase();
+    const phone = String(req.body?.phone || "").trim();
+    const name = String(req.body?.name || "").trim();
 
     if (!isEmail(email)) {
       return res.status(400).json({ error: "Invalid email" });
@@ -190,6 +200,8 @@ app.post("/create-payment-intent", async (req, res) => {
       metadata: {
         version,
         email,
+        name,
+        phone,
         product: "eclipso_preorder"
       }
     });
