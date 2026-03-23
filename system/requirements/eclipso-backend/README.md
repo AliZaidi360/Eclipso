@@ -56,8 +56,10 @@ node server.js
 
 Edit these constants in both HTML pages:
 
-- `BACKEND_URL` in each page script (`http://localhost:3001` in local dev)
-- `STRIPE_PK` in `eclipso-payment.html` script
+- `BACKEND_URL` in each page script (`http://localhost:3001` in local dev, update to deployed backend URL for production)
+- `STRIPE_PK` in `eclipso-payment.html` script (get from Stripe Dashboard > Developers > API keys > Publishable key)
+
+For local testing, use `pk_test_...` key. For production, use `pk_live_...`.
 
 ## 6) Test payments
 
