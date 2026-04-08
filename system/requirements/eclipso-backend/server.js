@@ -155,6 +155,16 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
 
 app.use(express.json());
 
+const path = require("path");
+
+// Serve static files from the parent directory (so CSS, images, etc. work)
+app.use(express.static(path.join(__dirname, "..")));
+
+// Send users to the landing page when they visit the exact root URL
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../eclipso-landing.html"));
+});
+
 app.post("/signup", async (req, res) => {
   try {
     const email = String(req.body?.email || "").trim().toLowerCase();
