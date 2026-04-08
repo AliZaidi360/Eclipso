@@ -157,12 +157,12 @@ app.use(express.json());
 
 const path = require("path");
 
-// Serve static files from the parent directory (so CSS, images, etc. work)
-app.use(express.static(path.join(__dirname, "..")));
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, "public")));
 
 // Send users to the landing page when they visit the exact root URL
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../eclipso-landing.html"));
+  res.sendFile(path.join(__dirname, "public", "eclipso-landing.html"));
 });
 
 app.post("/signup", async (req, res) => {
