@@ -580,6 +580,25 @@
       margin-top: 0.7rem;
       padding-left: 1rem;
       color: var(--silver);
+      position: relative;
+      z-index: 2;
+    }
+
+    .build-img {
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto 1.5rem;
+      display: block;
+      position: relative;
+      z-index: 2;
+    }
+
+    .select-btn {
+      margin-top: 1.5rem;
+      display: block;
+      text-align: center;
+      position: relative;
+      z-index: 2;
     }
 
     .notify {
@@ -866,29 +885,33 @@
     <div class="eyebrow">// 02 - BUILT TO LAST</div>
     <h2 class="title">CHOOSE YOUR BUILD</h2>
     <div class="materials reveal">
-      <article class="mat">
+      <article class="mat" id="v1-card">
         <div class="watermark">V1</div>
+        <img src="Aluminum.png" alt="Aluminum Build" class="build-img" />
         <div class="eyebrow">VERSION 01</div>
-        <h3>V1 EDITION</h3>
+        <h3>ALUMINUM EDITION</h3>
         <ul>
           <li>Stainless steel internals</li>
-          <li>Available in Aluminum or Titanium</li>
-          <li>Classic geometric face design</li>
+          <li>Brushed aluminum covers</li>
+          <li>Lighter daily carry weight</li>
           <li>Corrosion-resistant shell</li>
         </ul>
-        <div class="badge">V1 BUILD</div>
+        <div class="badge">STANDARD BUILD</div>
+        <a class="btn select-btn" href="eclipso-payment.html?version=v1&material=aluminum">SELECT ALUMINUM</a>
       </article>
-      <article class="mat ti">
+      <article class="mat ti" id="v2-card">
         <div class="watermark">V2</div>
+        <img src="Titaniium.png" alt="Titanium Build" class="build-img" />
         <div class="eyebrow">VERSION 02</div>
-        <h3>V2 EDITION</h3>
+        <h3>TITANIUM EDITION</h3>
         <ul>
           <li>Stainless steel internals</li>
-          <li>Available in Aluminum or Titanium</li>
-          <li>Smooth tactical face design</li>
-          <li>High-end sleek finish</li>
+          <li>Brushed titanium covers</li>
+          <li>Premium strength-to-weight ratio</li>
+          <li>High-end tactical finish</li>
         </ul>
-        <div class="badge silver">V2 BUILD</div>
+        <div class="badge silver">TITANIUM BUILD</div>
+        <a class="btn select-btn" href="eclipso-payment.html?version=v2&material=titanium">SELECT TITANIUM</a>
       </article>
     </div>
   </section>
