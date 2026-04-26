@@ -405,10 +405,13 @@
       <a class="back" href="index.html"><- BACK TO GEOEDC</a>
           <div class="logo">GE<b>O</b>EDC</div>
 
+          <div class="toggle" style="margin-bottom: 0.4rem;">
+            <button id="v1" class="active" type="button" data-version="v1" data-price="1.99">V1 EDITION<br />$1.99</button>
+            <button id="v2" type="button" data-version="v2" data-price="1.99">V2 EDITION<br />$1.99</button>
+          </div>
           <div class="toggle">
-            <button id="v1" class="active" type="button" data-version="v1" data-price="1.99">V1
-              ALUMINUM<br />$1.99</button>
-            <button id="v2" type="button" data-version="v2" data-price="1.99">V2 TITANIUM<br />$1.99</button>
+            <button id="mat-al" class="active" type="button" data-mat="aluminum">ALUMINUM<br />BUILD</button>
+            <button id="mat-ti" type="button" data-mat="titanium">TITANIUM<br />BUILD</button>
           </div>
 
           <div class="ring-area">
@@ -490,6 +493,7 @@
     });
 
     let selectedVersion = "v1";
+    let selectedMaterial = "aluminum";
     let selectedPrice = 1.99;
 
     const stripe = Stripe(STRIPE_PK);
@@ -530,8 +534,16 @@
       document.getElementById("v2").classList.toggle("active", version === "v2");
     }
 
+    function setMaterial(material) {
+      selectedMaterial = material;
+      document.getElementById("mat-al").classList.toggle("active", material === "aluminum");
+      document.getElementById("mat-ti").classList.toggle("active", material === "titanium");
+    }
+
     document.getElementById("v1").addEventListener("click", () => setVersion("v1", "1.99"));
     document.getElementById("v2").addEventListener("click", () => setVersion("v2", "1.99"));
+    document.getElementById("mat-al").addEventListener("click", () => setMaterial("aluminum"));
+    document.getElementById("mat-ti").addEventListener("click", () => setMaterial("titanium"));
 
     function showError(text) {
       const error = document.getElementById("error");
@@ -577,6 +589,7 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             version: selectedVersion,
+            material: selectedMaterial,
             email,
             phone,
             name,
