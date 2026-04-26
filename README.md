@@ -1,19 +1,19 @@
-# ECLIPSO Project Status
+# GEO Project Status
 
-This repository contains the pre-launch web system for the ECLIPSO multitool product. Below is a summary of work completed so far and the remaining tasks for the team.
+This repository contains the pre-launch web system for the GEO multitool product. Below is a summary of work completed so far and the remaining tasks for the team.
 
-## ✅ Completed Work
+## Completed Work
 
-- **Landing Page (`eclipso-landing.html`)**
+- **Landing Page (`geo-landing.html`)**
   - Fully styled with dark tactical design and branded typography.
   - Email capture form implemented with offline queue fallback.
   - Animations, scroll effects, and responsive layout done.
 
-- **Payment Page (`eclipso-payment.html`)**
+- **Payment Page (`geo-payment.html`)**
   - Version selector (V1 aluminum, V2 titanium) with pricing.
   - Stripe Card Element integration and client-side form handling.
 
-- **Backend (`eclipso-backend/`)**
+- **Backend (`geo-backend/`)**
   - Node.js + Express server scaffolded.
   - API implemented:
     - `POST /signup` for lead capture
@@ -56,7 +56,7 @@ This repository contains the pre-launch web system for the ECLIPSO multitool pro
   - Write deployment guides for frontend (Netlify) and backend.
   - Share Google Sheet structure and API credentials securely.
 
-## 📋 Notes
+## Notes
 
 - The project uses plain HTML, CSS, and vanilla JavaScript—no build tools or frameworks.
 - All styling is inline within HTML files for portability.
