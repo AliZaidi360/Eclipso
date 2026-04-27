@@ -161,14 +161,13 @@
       gap: 1rem;
     }
     .build-icon {
-      width: 40px;
-      height: 40px;
+      width: 64px;
+      height: 64px;
       border: 1px solid var(--steel);
-      display: grid;
-      place-items: center;
       flex-shrink: 0;
+      overflow: hidden;
     }
-    .build-icon svg { opacity: 0.7; }
+    .build-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .build-info .build-section-label {
       font-family: "DM Mono", monospace;
       font-size: 0.62rem;
@@ -339,7 +338,7 @@
 
     <div class="deposit-card">
       <div class="deposit-label">PRE-ORDER DEPOSIT</div>
-      <div class="deposit-price" id="display-price">$1.99</div>
+      <div class="deposit-price" id="display-price">$0.99</div>
       <div class="deposit-sub">To secure your spot</div>
       <hr class="divider" />
       <div class="price-row">
@@ -355,10 +354,7 @@
 
     <div class="build-card">
       <div class="build-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e8c44a" stroke-width="1.5">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
-        </svg>
+        <img id="build-img" src="Aluminum.png" alt="Selected build" />
       </div>
       <div class="build-info">
         <div class="build-section-label">YOUR BUILD</div>
@@ -390,11 +386,11 @@
         <div class="pay-section-label">CHOOSE PAYMENT</div>
         <button id="submit" type="submit">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-          Pay with Stripe — <span id="btn-price">$1.99</span>
+          Pay with Stripe — <span id="btn-price">$0.99</span>
         </button>
         <button id="apple-pay-btn" type="button">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"/></svg>
-          Apple Pay — <span class="apple-price">$1.99</span>
+          Apple Pay — <span class="apple-price">$0.99</span>
         </button>
         <p class="demo-note">This is a demo checkout. No real payment will be processed.</p>
       </div>
@@ -415,7 +411,7 @@
     const BACKEND_URL = "https://eclipso-production.up.railway.app";
 
     let selectedVersion = "v1";
-    let selectedPrice = 1.99;
+    let selectedPrice = 0.99;
 
     function setVersion(version, price) {
       selectedVersion = version;
@@ -425,13 +421,14 @@
       document.getElementById("btn-price").textContent = priceStr;
       document.querySelectorAll(".apple-price").forEach(el => el.textContent = priceStr);
       document.getElementById("build-label").textContent = version === "v2" ? "Titanium" : "Aluminum";
+      document.getElementById("build-img").src = version === "v2" ? "Titaniium.png" : "Aluminum.png";
     }
 
     window.addEventListener("DOMContentLoaded", () => {
       const params = new URLSearchParams(window.location.search);
       if (params.get("email")) document.getElementById("email").value = params.get("email");
       if (params.get("phone")) document.getElementById("phone").value = params.get("phone");
-      if (params.get("version") === "v2") setVersion("v2", "1.99");
+      if (params.get("version") === "v2") setVersion("v2", "0.99");
     });
 
     const stripe = Stripe(STRIPE_PK);
