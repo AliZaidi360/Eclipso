@@ -234,24 +234,50 @@ a { color: inherit; text-decoration: none; }
 .video-section video { width: 100%; max-height: 520px; object-fit: cover; display: block; }
 .section { padding: 4rem 0; border-bottom: 1px solid var(--steel); }
 .section .title { font-family: "Bebas Neue", sans-serif; font-size: clamp(2.2rem, 6vw, 4.6rem); margin: 0.4rem 0 1.3rem; }
-.tool-grid {
-  background: var(--steel);
-  display: grid;
-  gap: 1px;
-  grid-template-columns: repeat(5, 1fr);
+
+/* Tools carousel */
+.tools-carousel { padding: 2rem 0 0; border-bottom: 1px solid var(--steel); }
+.tools-carousel .wrapper { }
+.tools-eyebrow { font-family: "DM Mono", monospace; font-size: 0.72rem; color: var(--silver); letter-spacing: 0.1em; padding-top: 2.5rem; }
+.tools-heading { font-family: "Bebas Neue", sans-serif; font-size: clamp(1.8rem, 5vw, 3rem); color: var(--light); margin: 0.3rem 0 1.8rem; }
+.tools-featured { display: flex; flex-direction: column; align-items: center; padding: 1.5rem 0 1rem; }
+.tool-icon-box {
+  width: 90px; height: 90px;
+  background: var(--iron);
+  border: 1px solid var(--steel);
+  border-radius: 18px !important;
+  display: grid; place-items: center;
+  margin-bottom: 1rem;
 }
-.tool {
-  background: var(--carbon);
-  min-height: 220px;
-  padding: 1rem;
-  border-top: 2px solid transparent;
-  transition: 0.2s;
+.tool-icon-box svg { width: 38px; height: 38px; fill: none; stroke: var(--light); stroke-width: 1.6; }
+.tools-featured .feat-name { font-family: "Bebas Neue", sans-serif; font-size: 2rem; color: var(--light); }
+.tools-featured .feat-desc { font-size: 0.9rem; color: var(--silver); margin-top: 0.2rem; }
+.tools-dots { display: flex; justify-content: center; gap: 0.5rem; margin: 1rem 0 1.5rem; }
+.tools-dots span {
+  width: 8px; height: 8px; border-radius: 50% !important;
+  background: var(--steel); cursor: pointer; transition: 0.2s;
 }
-.tool:hover { border-top-color: var(--accent); background: #1a1a20; }
-.tool .num { font-family: "DM Mono", monospace; font-size: 0.72rem; color: var(--silver); }
-.tool h3 { margin-top: 0.8rem; font-family: "Bebas Neue", sans-serif; font-size: 1.8rem; }
-.tool p { margin-top: 0.5rem; color: var(--silver); }
-.tool svg { width: 38px; height: 38px; margin-top: 0.9rem; fill: none; stroke: var(--accent); stroke-width: 1.8; }
+.tools-dots span.active { background: var(--light); width: 24px; border-radius: 4px !important; }
+.tools-strip {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 1px; background: var(--steel);
+  border-top: 1px solid var(--steel);
+}
+.strip-tool {
+  background: var(--carbon); padding: 1rem 0.8rem;
+  cursor: pointer; transition: background 0.15s;
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.4rem;
+}
+.strip-tool svg { width: 28px; height: 28px; fill: none; stroke: var(--silver); stroke-width: 1.6; transition: stroke 0.15s; }
+.strip-tool .strip-name { font-family: "Bebas Neue", sans-serif; font-size: 1rem; color: var(--silver); transition: color 0.15s; }
+.strip-tool .strip-desc { font-family: "DM Mono", monospace; font-size: 0.62rem; color: var(--ash); }
+.strip-tool.active { background: var(--iron); }
+.strip-tool.active svg { stroke: var(--accent); }
+.strip-tool.active .strip-name { color: var(--accent); }
+
+/* Video */
+.video-section { border-bottom: 1px solid var(--steel); padding: 3rem 0; display: flex; justify-content: center; background: var(--black); }
+.video-section video { width: 100%; max-width: 500px; border: 1px solid var(--steel); display: block; }
 .reveal { opacity: 0; transform: translateY(18px); transition: 0.65s; }
 .reveal.show { opacity: 1; transform: translateY(0); }
 .materials { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--steel); }
@@ -402,15 +428,50 @@ a { color: inherit; text-decoration: none; }
   <div class="spec"><div class="n">EDC</div><div class="l">Everyday Carry</div></div>
 </section>
 
-<section class="section wrapper" id="tools">
-  <div class="eyebrow">01 - WHAT IT DOES</div>
-  <h2 class="title">FIVE TOOLS. ONE ROTATION.</h2>
-  <div class="tool-grid reveal">
-    <article class="tool"><div class="num">01</div><svg viewBox="0 0 24 24"><path d="M4 20 L20 4"/><path d="M7 17 L17 7"/></svg><h3>BLADE</h3><p>Precision edge for quick everyday cuts and controlled utility work.</p></article>
-    <article class="tool"><div class="num">02</div><svg viewBox="0 0 24 24"><path d="M7 12 h10"/><circle cx="6" cy="12" r="2"/><path d="M17 7 v10"/></svg><h3>BOTTLE OPENER</h3><p>Leverage notch engineered for clean cap lift with one-hand stability.</p></article>
-    <article class="tool"><div class="num">03</div><svg viewBox="0 0 24 24"><path d="M4 4 L20 20"/><path d="M20 4 L4 20"/><circle cx="8" cy="8" r="2"/></svg><h3>WIRE CUTTER</h3><p>Compact snip profile for thin wires, ties, and quick field adjustments.</p></article>
-    <article class="tool"><div class="num">04</div><svg viewBox="0 0 24 24"><path d="M4 12 h16"/><path d="M4 12 v-4"/><path d="M20 12 v4"/></svg><h3>SCREWDRIVER/PRY</h3><p>Flat head edge doubles as micro pry tool for stubborn lids and clips.</p></article>
-    <article class="tool"><div class="num">05</div><svg viewBox="0 0 24 24"><path d="M4 8 h12"/><path d="M16 8 c2 2 2 6 0 8"/></svg><h3>BOX OPENER</h3><p>Safe package opening geometry that keeps cuts controlled and quick.</p></article>
+<section class="tools-carousel" id="tools">
+  <div class="wrapper">
+    <div class="tools-eyebrow">STEP 01</div>
+    <div class="tools-heading">5 TOOLS, ONE ROTATION</div>
+
+    <div class="tools-featured">
+      <div class="tool-icon-box">
+        <svg id="feat-icon" viewBox="0 0 24 24"><path d="M4 20 L20 4"/><path d="M7 17 L17 7"/></svg>
+      </div>
+      <div class="feat-name" id="feat-name">BLADE</div>
+      <div class="feat-desc" id="feat-desc">Precision cutting edge</div>
+    </div>
+
+    <div class="tools-dots" id="tools-dots">
+      <span class="active"></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="tools-strip" id="tools-strip">
+    <div class="strip-tool active" data-i="0">
+      <svg viewBox="0 0 24 24"><path d="M4 20 L20 4"/><path d="M7 17 L17 7"/></svg>
+      <div class="strip-name">Blade</div>
+      <div class="strip-desc">Precision cutting edge</div>
+    </div>
+    <div class="strip-tool" data-i="1">
+      <svg viewBox="0 0 24 24"><path d="M7 12 h10"/><circle cx="6" cy="12" r="2"/><path d="M17 7 v10"/></svg>
+      <div class="strip-name">Screwdriver</div>
+      <div class="strip-desc">Flathead &amp; Phillips</div>
+    </div>
+    <div class="strip-tool" data-i="2">
+      <svg viewBox="0 0 24 24"><path d="M7 12 h10"/><circle cx="6" cy="12" r="2"/><path d="M17 7 v4"/></svg>
+      <div class="strip-name">Bottle Opener</div>
+      <div class="strip-desc">Built-in leverage</div>
+    </div>
+    <div class="strip-tool" data-i="3">
+      <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16"/><path d="M9 9h6M9 13h4"/></svg>
+      <div class="strip-name">File</div>
+      <div class="strip-desc">Fine metal finishing</div>
+    </div>
+    <div class="strip-tool" data-i="4">
+      <svg viewBox="0 0 24 24"><path d="M4 12 h12"/><path d="M14 8 l4 4 -4 4"/></svg>
+      <div class="strip-name">Pry Bar</div>
+      <div class="strip-desc">Multi-use leverage tool</div>
+    </div>
   </div>
 </section>
 
@@ -486,6 +547,36 @@ a { color: inherit; text-decoration: none; }
 </footer>
 
 <script>
+// Tools carousel
+const tools = [
+  { name: "BLADE",        desc: "Precision cutting edge",    svg: '<path d="M4 20 L20 4"/><path d="M7 17 L17 7"/>' },
+  { name: "SCREWDRIVER",  desc: "Flathead & Phillips",       svg: '<path d="M7 12 h10"/><circle cx="6" cy="12" r="2"/><path d="M17 7 v10"/>' },
+  { name: "BOTTLE OPENER",desc: "Built-in leverage",         svg: '<path d="M7 12 h10"/><circle cx="6" cy="12" r="2"/><path d="M17 7 v4"/>' },
+  { name: "FILE",         desc: "Fine metal finishing",      svg: '<rect x="6" y="4" width="12" height="16"/><path d="M9 9h6M9 13h4"/>' },
+  { name: "PRY BAR",      desc: "Multi-use leverage tool",   svg: '<path d="M4 12 h12"/><path d="M14 8 l4 4 -4 4"/>' },
+];
+
+let activeTool = 0;
+
+function setTool(i) {
+  activeTool = i;
+  const t = tools[i];
+  document.getElementById("feat-icon").innerHTML = t.svg;
+  document.getElementById("feat-name").textContent = t.name;
+  document.getElementById("feat-desc").textContent = t.desc;
+  document.querySelectorAll("#tools-dots span").forEach((d, j) => d.classList.toggle("active", j === i));
+  document.querySelectorAll("#tools-strip .strip-tool").forEach((s, j) => s.classList.toggle("active", j === i));
+}
+
+document.querySelectorAll("#tools-strip .strip-tool").forEach((el) => {
+  el.addEventListener("click", () => setTool(parseInt(el.dataset.i)));
+});
+document.querySelectorAll("#tools-dots span").forEach((dot, i) => {
+  dot.addEventListener("click", () => setTool(i));
+});
+
+setInterval(() => setTool((activeTool + 1) % tools.length), 3000);
+
 const BACKEND_URL = "https://eclipso-production.up.railway.app";
 
 function isEmail(email) {
