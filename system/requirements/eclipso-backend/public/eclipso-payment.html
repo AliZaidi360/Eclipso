@@ -1,15 +1,12 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GEOEDC | Reserve</title>
+  <title>GEO TOOLS | Reserve</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;500;700&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;500;700&display=swap" rel="stylesheet" />
   <script src="https://js.stripe.com/v3/"></script>
   <style>
     :root {
@@ -25,475 +22,417 @@
       --accent: #e8c44a;
       --green: #2ecc71;
       --red: #e74c3c;
+      --blue: #5469d4;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      border-radius: 0 !important;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; }
     body {
-      cursor: crosshair;
       min-height: 100vh;
       background: var(--black);
       color: var(--light);
       font-family: "Barlow Condensed", sans-serif;
     }
-
     body::before {
       content: "";
       position: fixed;
       inset: 0;
       pointer-events: none;
       z-index: 9999;
-      opacity: 0.08;
+      opacity: 0.05;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
     }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: 100vh;
-    }
-
-    .left {
-      position: sticky;
-      top: 0;
-      align-self: start;
-      height: 100vh;
-      border-right: 1px solid var(--steel);
-      padding: 2rem;
-      background: linear-gradient(160deg, #131317, #0a0a0c);
+    /* Header */
+    .header {
+      border-bottom: 1px solid var(--steel);
+      padding: 1rem 2rem;
       display: flex;
-      flex-direction: column;
-      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+      position: relative;
     }
-
     .back {
+      position: absolute;
+      left: 2rem;
       font-family: "DM Mono", monospace;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--silver);
       text-decoration: none;
     }
-
-    .logo {
+    .back:hover { color: var(--light); }
+    .site-title {
       font-family: "Bebas Neue", sans-serif;
-      font-size: 2.2rem;
-      letter-spacing: 0.08em;
+      font-size: 1.5rem;
+      letter-spacing: 0.15em;
+      color: var(--light);
+    }
+    .site-title b { color: var(--accent); font-weight: 400; }
+
+    /* Page */
+    .page {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
     }
 
-    .logo b {
-      color: var(--accent);
-      font-weight: 400;
-    }
-
-    .toggle {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: var(--steel);
-    }
-
-    .toggle button {
-      appearance: none;
-      border: 0;
-      background: var(--carbon);
+    .badge {
+      display: inline-block;
+      border: 1px solid var(--steel);
       color: var(--silver);
-      padding: 0.9rem 0.6rem;
+      font-family: "DM Mono", monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      padding: 0.3rem 0.7rem;
+      align-self: center;
+    }
+
+    .heading-block { text-align: center; }
+    .heading-block h1 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(2.2rem, 8vw, 3.2rem);
+      line-height: 1;
+      letter-spacing: 0.04em;
+    }
+    .heading-block p {
+      margin-top: 0.5rem;
+      color: var(--silver);
+      font-size: 0.95rem;
+    }
+
+    /* Deposit card */
+    .deposit-card {
+      background: var(--carbon);
+      border: 1px solid var(--steel);
+      padding: 1.4rem;
+    }
+    .deposit-label {
+      font-family: "DM Mono", monospace;
+      font-size: 0.68rem;
+      color: var(--silver);
+      letter-spacing: 0.1em;
+      text-align: center;
+    }
+    .deposit-price {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 4rem;
+      color: var(--light);
+      text-align: center;
+      line-height: 1;
+      margin: 0.4rem 0 0.2rem;
+    }
+    .deposit-sub {
+      text-align: center;
       font-family: "DM Mono", monospace;
       font-size: 0.72rem;
-      text-transform: uppercase;
-      border-top: 2px solid transparent;
-      cursor: pointer;
+      color: var(--ash);
+      margin-bottom: 1.2rem;
     }
-
-    .toggle button.active {
-      color: var(--light);
-      border-top-color: var(--accent);
-      background: #1b1b21;
-    }
-
-    .ring-area {
-      position: relative;
-      width: 280px;
-      height: 280px;
-      margin: 0.8rem auto 0.4rem;
-      display: grid;
-      place-items: center;
-    }
-
-    .ring {
-      position: absolute;
-      border: 1px solid var(--steel);
-      border-radius: 50% !important;
-    }
-
-    .outer {
-      width: 280px;
-      height: 280px;
-      animation: spin 20s linear infinite;
-    }
-
-    .mid {
-      width: 210px;
-      height: 210px;
-      animation: spinr 14s linear infinite;
-    }
-
-    .inner {
-      width: 156px;
-      height: 156px;
-      animation: spin 8s linear infinite;
-    }
-
-    .outer::before {
-      content: "";
-      position: absolute;
-      top: -4px;
-      left: 50%;
-      width: 8px;
-      height: 8px;
-      background: var(--accent);
-      transform: translateX(-50%);
-    }
-
-    .core {
-      width: 104px;
-      height: 104px;
-      border-radius: 50% !important;
-      border: 1px solid var(--steel);
-      background: #121216;
-      display: grid;
-      place-items: center;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    @keyframes spinr {
-      to {
-        transform: rotate(-360deg);
-      }
-    }
-
-    .list-title {
+    .divider { border: none; border-top: 1px solid var(--steel); margin: 0; }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.65rem 0;
       font-family: "DM Mono", monospace;
-      font-size: 0.74rem;
+      font-size: 0.78rem;
+      border-bottom: 1px solid var(--steel);
+    }
+    .price-row:last-child { border-bottom: none; }
+    .price-row .label { color: var(--silver); }
+    .price-row .value { color: var(--light); }
+    .price-row .value.green { color: var(--green); }
+    .deposit-note {
+      margin-top: 0.8rem;
+      font-size: 0.82rem;
+      color: var(--ash);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    /* Your build */
+    .build-card {
+      background: var(--carbon);
+      border: 1px solid var(--steel);
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .build-icon {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--steel);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .build-icon svg { opacity: 0.7; }
+    .build-info .build-section-label {
+      font-family: "DM Mono", monospace;
+      font-size: 0.62rem;
+      color: var(--ash);
+      letter-spacing: 0.1em;
+    }
+    .build-info .build-name {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.5rem;
+      color: var(--light);
+      line-height: 1.1;
+    }
+
+    /* Form */
+    .form-section-label {
+      font-family: "DM Mono", monospace;
+      font-size: 0.68rem;
+      color: var(--silver);
+      letter-spacing: 0.1em;
+    }
+    form { display: flex; flex-direction: column; gap: 0.8rem; }
+    .field { display: flex; flex-direction: column; gap: 0.3rem; }
+    .field label {
+      font-family: "DM Mono", monospace;
+      font-size: 0.68rem;
       color: var(--silver);
       letter-spacing: 0.07em;
     }
-
-    ul {
-      padding-left: 1.1rem;
-      color: var(--silver);
-      display: grid;
-      gap: 0.34rem;
-    }
-
-    .summary {
-      margin-top: auto;
-      border-top: 1px solid var(--steel);
-      padding-top: 1rem;
-      font-family: "DM Mono", monospace;
-      font-size: 0.78rem;
-    }
-
-    .summary .row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.45rem;
-      color: var(--silver);
-    }
-
-    .summary .total {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      border-top: 1px solid var(--steel);
-      padding-top: 0.6rem;
-      margin-top: 0.5rem;
-    }
-
-    .summary .amount {
-      font-family: "Bebas Neue", sans-serif;
-      font-size: 2.5rem;
-      line-height: 1;
-      color: var(--accent);
-    }
-
-    .right {
-      padding: 3rem 2.3rem;
-      overflow-y: auto;
-    }
-
-    .eyebrow {
-      font-family: "DM Mono", monospace;
-      color: var(--silver);
-      font-size: 0.8rem;
-    }
-
-    h1 {
-      margin-top: 0.6rem;
-      font-family: "Bebas Neue", sans-serif;
-      font-size: clamp(2.8rem, 8vw, 5.3rem);
-      line-height: 0.9;
-    }
-
-    .subtitle {
-      margin-top: 0.6rem;
-      color: var(--silver);
-      max-width: 46ch;
-    }
-
-    form {
-      margin-top: 1.5rem;
-      display: grid;
-      gap: 0.85rem;
-      max-width: 560px;
-    }
-
-    label {
-      font-family: "DM Mono", monospace;
-      font-size: 0.74rem;
-      color: var(--silver);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    input,
-    #card-element {
-      margin-top: 0.33rem;
+    input, #card-element {
       width: 100%;
-      padding: 0.86rem;
+      padding: 0.85rem;
       border: 1px solid var(--steel);
       background: var(--iron);
       color: var(--light);
       font-family: "DM Mono", monospace;
       font-size: 0.88rem;
     }
-
-    input:focus {
-      border-color: var(--accent);
-      outline: none;
-    }
+    input:focus { border-color: var(--accent); outline: none; }
 
     #error {
-      min-height: 46px;
-      border: 1px solid transparent;
+      min-height: 40px;
       color: var(--red);
       font-family: "DM Mono", monospace;
       font-size: 0.78rem;
-      padding: 0.7rem;
+      padding: 0.6rem;
+      border: 1px solid transparent;
     }
+    #error.show { border-color: var(--red); background: rgba(231,76,60,0.08); }
 
-    #error.show {
-      border-color: var(--red);
-      background: rgba(231, 76, 60, 0.08);
+    /* Payment buttons */
+    .pay-section-label {
+      font-family: "DM Mono", monospace;
+      font-size: 0.68rem;
+      color: var(--silver);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
     }
-
     #submit {
-      margin-top: 0.3rem;
+      width: 100%;
       appearance: none;
-      border: 1px solid var(--accent);
-      background: var(--accent);
+      border: none;
+      background: var(--blue);
+      color: var(--white);
+      font-family: "DM Mono", monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      padding: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    #submit:hover { background: #4357c0; }
+    #submit[disabled] { opacity: 0.6; cursor: wait; }
+
+    .spinner {
+      width: 12px; height: 12px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50% !important;
+      display: inline-block;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #apple-pay-btn {
+      width: 100%;
+      appearance: none;
+      border: 1px solid var(--steel);
+      background: var(--white);
       color: var(--black);
       font-family: "DM Mono", monospace;
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      padding: 0.93rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      padding: 1rem;
       cursor: pointer;
-    }
-
-    #submit[disabled] {
-      opacity: 0.6;
-      cursor: wait;
-    }
-
-    .security {
-      margin-top: 0.7rem;
       display: flex;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-      color: var(--silver);
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+    }
+    #apple-pay-btn:hover { background: #e0e0e0; }
+    #apple-pay-btn svg { flex-shrink: 0; }
+
+    .demo-note {
+      text-align: center;
       font-family: "DM Mono", monospace;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
+      color: var(--red);
+      margin-top: 0.3rem;
     }
 
+    /* Success */
     #success {
       display: none;
       border: 1px solid var(--steel);
-      margin-top: 1.1rem;
-      padding: 1rem;
-      max-width: 560px;
+      padding: 1.5rem;
+      text-align: center;
     }
-
-    .check {
-      width: 54px;
-      height: 54px;
+    #success .check {
+      width: 54px; height: 54px;
       border: 1px solid var(--green);
       color: var(--green);
       display: grid;
       place-items: center;
       font-size: 1.8rem;
-      margin-bottom: 0.8rem;
+      margin: 0 auto 0.8rem;
       animation: pop 0.6s ease;
     }
-
-    @keyframes pop {
-      from {
-        transform: scale(0.7);
-        opacity: 0;
-      }
-
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
+    @keyframes pop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     #success h2 {
       font-family: "Bebas Neue", sans-serif;
-      font-size: 3rem;
+      font-size: 2.5rem;
       color: var(--green);
     }
-
     #order-id {
       font-family: "DM Mono", monospace;
       color: var(--accent);
       margin-top: 0.5rem;
+      font-size: 0.82rem;
     }
-
     #success a {
       color: var(--accent);
       display: inline-block;
       margin-top: 0.8rem;
       font-family: "DM Mono", monospace;
-    }
-
-    .spinner {
-      width: 12px;
-      height: 12px;
-      border: 2px solid rgba(7, 7, 8, 0.4);
-      border-top-color: var(--black);
-      display: inline-block;
-      margin-right: 0.4rem;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @media (max-width: 990px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .left {
-        position: static;
-        height: auto;
-      }
+      font-size: 0.82rem;
     }
   </style>
 </head>
-
 <body>
-  <div class="layout">
-    <aside class="left">
-      <a class="back" href="index.html"><- BACK TO GEOEDC</a>
-          <div class="logo">GE<b>O</b>EDC</div>
 
-          <div class="toggle">
-            <button id="v1" class="active" type="button" data-version="v1" data-price="1.99">V1
-              ALUMINUM<br />$1.99</button>
-            <button id="v2" type="button" data-version="v2" data-price="1.99">V2 TITANIUM<br />$1.99</button>
-          </div>
+  <header class="header">
+    <a class="back" href="index.html">← BACK TO GEOEDC</a>
+    <div class="site-title">GEO T<b>O</b>OLS</div>
+  </header>
 
-          <div class="ring-area">
-            <div class="ring outer"></div>
-            <div class="ring mid"></div>
-            <div class="ring inner"></div>
-            <div class="core">
-              <svg width="56" height="56" viewBox="0 0 72 72" fill="none" stroke="#e8c44a" stroke-width="2">
-                <circle cx="36" cy="36" r="7" />
-                <path d="M36 11 L40 24 L32 24 Z" />
-                <path d="M36 61 L41 49 L31 49 Z" />
-                <path d="M61 36 L49 40 L49 31 Z" />
-                <path d="M11 36 L23 41 L23 31 Z" />
-                <circle cx="36" cy="7" r="4" />
-              </svg>
-            </div>
-          </div>
+  <div class="page">
 
-          <div class="list-title">WHAT YOU GET</div>
-          <ul>
-            <li>GEOEDC EDC Multitool (chosen build)</li>
-            <li>Blade - Bottle Opener - Wire Cutter</li>
-            <li>Screwdriver/Pry - Box Opener</li>
-            <li>First production run - ships before retail</li>
-            <li>Backer-exclusive early bird pricing</li>
-            <li>Email updates through Kickstarter launch</li>
-          </ul>
+    <div class="badge">LIMITED PRE-ORDER</div>
 
-          <div class="summary">
-            <div class="row"><span>Reservation fee</span><span id="unit">$1.99</span></div>
-            <div class="row"><span>Shipping</span><span>Calculated at launch</span></div>
-            <div class="total"><span>Total today</span><span class="amount" id="total">$1.99</span></div>
-          </div>
-    </aside>
+    <div class="heading-block">
+      <h1>SECURE YOUR GEO TOOL</h1>
+      <p>Be among the first. Lock in your exclusive pre-order price.</p>
+    </div>
 
-    <main class="right">
-      <div class="eyebrow">SECURE PRE-ORDER</div>
-      <h1>RESERVE YOURS.</h1>
-      <p class="subtitle">Lock your early bird pricing now. Payment is securely processed by Stripe.</p>
+    <div class="deposit-card">
+      <div class="deposit-label">PRE-ORDER DEPOSIT</div>
+      <div class="deposit-price" id="display-price">$1.99</div>
+      <div class="deposit-sub">To secure your spot</div>
+      <hr class="divider" />
+      <div class="price-row">
+        <span class="label">Retail Price</span>
+        <span class="value">$75 — $100</span>
+      </div>
+      <div class="price-row">
+        <span class="label">Pre-Order Discount</span>
+        <span class="value green">Included</span>
+      </div>
+      <p class="deposit-note">Pre-order now and receive an exclusive discount off the final retail price when we ship.</p>
+    </div>
 
-      <form id="checkout-form" novalidate>
-        <label>Email Address<input id="email" type="email" required /></label>
-        <label>Mobile Number (SMS)<input id="phone" type="tel" /></label>
-        <label>Full Name<input id="name" type="text" required /></label>
-        <label>Card Details<div id="card-element"></div></label>
+    <div class="build-card">
+      <div class="build-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e8c44a" stroke-width="1.5">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+        </svg>
+      </div>
+      <div class="build-info">
+        <div class="build-section-label">YOUR BUILD</div>
+        <div class="build-name" id="build-label">Aluminum</div>
+      </div>
+    </div>
 
-        <div id="error"></div>
-        <button id="submit" type="submit">RESERVE FOR $1.99</button>
+    <form id="checkout-form" novalidate>
+      <div class="field">
+        <label for="email">EMAIL</label>
+        <input id="email" type="email" placeholder="you@example.com" required />
+      </div>
+      <div class="field">
+        <label for="phone">PHONE</label>
+        <input id="phone" type="tel" placeholder="+1 (555) 000-0000" />
+      </div>
+      <div class="field">
+        <label for="name">FULL NAME</label>
+        <input id="name" type="text" placeholder="Your name" required />
+      </div>
+      <div class="field">
+        <label>CARD DETAILS</label>
+        <div id="card-element"></div>
+      </div>
 
-        <div class="security">
-          <span>SSL Secured</span>
-          <span>Powered by Stripe</span>
-          <span>No hidden fees</span>
-        </div>
-      </form>
+      <div id="error"></div>
 
-      <section id="success">
-        <div class="check">✓</div>
-        <h2>YOU'RE IN.</h2>
-        <p>Your reservation is confirmed. A receipt has been emailed to you.</p>
-        <p id="order-id"></p>
-        <a href="index.html">Back to GEOEDC</a>
-      </section>
-    </main>
+      <div>
+        <div class="pay-section-label">CHOOSE PAYMENT</div>
+        <button id="submit" type="submit">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Pay with Stripe — <span id="btn-price">$1.99</span>
+        </button>
+        <button id="apple-pay-btn" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"/></svg>
+          Apple Pay — <span class="apple-price">$1.99</span>
+        </button>
+        <p class="demo-note">This is a demo checkout. No real payment will be processed.</p>
+      </div>
+    </form>
+
+    <section id="success">
+      <div class="check">✓</div>
+      <h2>YOU'RE IN.</h2>
+      <p>Your reservation is confirmed. A receipt has been emailed to you.</p>
+      <p id="order-id"></p>
+      <a href="index.html">Back to GEOEDC</a>
+    </section>
+
   </div>
 
   <script>
     const STRIPE_PK = "pk_test_51TDudBLcBs0EYr3pMmeH9JB15lqZ7EMBPMfnGJxH08MOwpDQxRPtNNJLyW7cQV7XsEJ1ZxoONG0BPRSebUh4Vaqq00WPTZ7ooc";
     const BACKEND_URL = "https://eclipso-production.up.railway.app";
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("email")) {
-        document.getElementById("email").value = params.get("email");
-      }
-      if (params.get("phone")) {
-        document.getElementById("phone").value = params.get("phone");
-      }
-      if (params.get("version") === "v2") {
-        setVersion("v2", "1.99");
-      }
-    });
-
     let selectedVersion = "v1";
     let selectedPrice = 1.99;
+
+    function setVersion(version, price) {
+      selectedVersion = version;
+      selectedPrice = parseFloat(price);
+      const priceStr = `$${selectedPrice.toFixed(2)}`;
+      document.getElementById("display-price").textContent = priceStr;
+      document.getElementById("btn-price").textContent = priceStr;
+      document.querySelectorAll(".apple-price").forEach(el => el.textContent = priceStr);
+      document.getElementById("build-label").textContent = version === "v2" ? "Titanium" : "Aluminum";
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("email")) document.getElementById("email").value = params.get("email");
+      if (params.get("phone")) document.getElementById("phone").value = params.get("phone");
+      if (params.get("version") === "v2") setVersion("v2", "1.99");
+    });
 
     const stripe = Stripe(STRIPE_PK);
     const elements = stripe.elements({
@@ -522,19 +461,9 @@
     });
     card.mount("#card-element");
 
-    function setVersion(version, price) {
-      selectedVersion = version;
-      selectedPrice = parseFloat(price);
-      const priceStr = `$${selectedPrice}`;
-      document.getElementById("unit").textContent = priceStr;
-      document.getElementById("total").textContent = priceStr;
-      document.getElementById("submit").textContent = `RESERVE FOR ${priceStr}`;
-      document.getElementById("v1").classList.toggle("active", version === "v1");
-      document.getElementById("v2").classList.toggle("active", version === "v2");
-    }
-
-    document.getElementById("v1").addEventListener("click", () => setVersion("v1", "1.99"));
-    document.getElementById("v2").addEventListener("click", () => setVersion("v2", "1.99"));
+    document.getElementById("apple-pay-btn").addEventListener("click", () => {
+      document.getElementById("checkout-form").requestSubmit();
+    });
 
     function showError(text) {
       const error = document.getElementById("error");
@@ -548,10 +477,10 @@
       const btn = document.getElementById("submit");
       if (state) {
         btn.disabled = true;
-        btn.innerHTML = '<span class="spinner"></span>PROCESSING';
+        btn.innerHTML = '<span class="spinner"></span> PROCESSING...';
       } else {
         btn.disabled = false;
-        btn.textContent = `RESERVE FOR $${selectedPrice}`;
+        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Pay with Stripe — $${selectedPrice.toFixed(2)}`;
       }
     }
 
@@ -563,14 +492,8 @@
       const phone = document.getElementById("phone").value.trim();
       const name = document.getElementById("name").value.trim();
 
-      if (!validEmail(email)) {
-        showError("Please enter a valid email address.");
-        return;
-      }
-      if (!name) {
-        showError("Please enter your full name.");
-        return;
-      }
+      if (!validEmail(email)) { showError("Please enter a valid email address."); return; }
+      if (!name) { showError("Please enter your full name."); return; }
 
       setLoading(true);
 
@@ -578,13 +501,7 @@
         const intentRes = await fetch(`${BACKEND_URL}/create-payment-intent`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            version: selectedVersion,
-            email,
-            phone,
-            name,
-            amount: Math.round(selectedPrice * 100)
-          })
+          body: JSON.stringify({ version: selectedVersion, email, phone, name, amount: Math.round(selectedPrice * 100) })
         });
 
         if (!intentRes.ok) {
@@ -595,17 +512,13 @@
         const { clientSecret } = await intentRes.json();
 
         const result = await stripe.confirmCardPayment(clientSecret, {
-          payment_method: {
-            card,
-            billing_details: { name, email }
-          }
+          payment_method: { card, billing_details: { name, email } }
         });
 
         if (result.error) throw new Error(result.error.message || "Payment failed.");
 
         if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
-          const id = result.paymentIntent.id || "";
-          const shortId = id.slice(-8).toUpperCase();
+          const shortId = (result.paymentIntent.id || "").slice(-8).toUpperCase();
           document.getElementById("checkout-form").style.display = "none";
           document.getElementById("order-id").textContent = `ORDER ID: ${shortId}`;
           document.getElementById("success").style.display = "block";
@@ -620,5 +533,4 @@
     });
   </script>
 </body>
-
 </html>
