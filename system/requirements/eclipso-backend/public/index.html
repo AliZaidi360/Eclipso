@@ -288,19 +288,14 @@ a { color: inherit; text-decoration: none; }
 .notify {
   position: relative;
   padding: 5rem 0;
-  background: radial-gradient(circle at 50% 40%, rgba(232,196,74,0.16), transparent 58%);
+  background: radial-gradient(circle at 50% 40%, rgba(232,196,74,0.08), transparent 58%);
 }
-.notify h2 { font-family: "Bebas Neue", sans-serif; font-size: clamp(3rem, 9vw, 7rem); line-height: 0.88; }
-.notify p { color: var(--silver); margin-top: 0.8rem; }
-.blink {
-  margin-top: 1rem;
-  font-family: "DM Mono", monospace;
-  font-size: 0.75rem;
-  color: var(--accent);
-}
-.blink span { animation: blinker 1.1s step-end infinite; }
-@keyframes blinker { 50% { opacity: 0.25; } }
-.notify form { margin-top: 1.2rem; display: grid; grid-template-columns: 1fr auto; gap: 0.65rem; }
+.notify .step-label { font-family: "DM Mono", monospace; font-size: 0.72rem; color: var(--silver); letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+.notify h2 { font-family: "Bebas Neue", sans-serif; font-size: clamp(2.4rem, 6vw, 4.5rem); line-height: 1; }
+.notify p { color: var(--silver); margin-top: 0.6rem; font-size: 0.95rem; }
+.notify form { margin-top: 1.6rem; display: flex; flex-direction: column; gap: 1rem; max-width: 480px; }
+.notify .field { display: flex; flex-direction: column; gap: 0.35rem; }
+.notify .field label { font-family: "DM Mono", monospace; font-size: 0.7rem; color: var(--silver); letter-spacing: 0.08em; }
 .notify input {
   background: var(--deep);
   color: var(--light);
@@ -309,10 +304,10 @@ a { color: inherit; text-decoration: none; }
   font-family: "DM Mono", monospace;
 }
 .notify input:focus { border-color: var(--accent); outline: none; }
+.notify .submit-btn { background: var(--white); color: var(--black); border: none; padding: 1rem; font-family: "DM Mono", monospace; font-size: 0.85rem; letter-spacing: 0.08em; cursor: pointer; width: 100%; text-align: center; }
+.notify .submit-btn:hover { background: var(--accent); }
 .note { margin-top: 0.5rem; font-size: 0.9rem; color: var(--ash); }
 #notify-msg { margin-top: 0.8rem; min-height: 1.2rem; font-family: "DM Mono", monospace; }
-.perks { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 1rem; color: var(--light); }
-.perks div::before { content: "->"; color: var(--accent); margin-right: 0.45rem; }
 .footer {
   border-top: 1px solid var(--steel);
   padding: 1.2rem 0;
@@ -451,24 +446,23 @@ a { color: inherit; text-decoration: none; }
 
 <section class="notify" id="notify">
   <div class="wrapper">
-    <div class="eyebrow">KICKSTARTER PRE-LAUNCH</div>
-    <h2>BE FIRST.<br />PAY LESS.</h2>
-    <p>Join the list now for early-bird launch access, first-run priority, and private build updates.</p>
-    <div class="blink"><span>●</span> $1.99 DEPOSIT TO SECURE - FINAL PRODUCT PRICED AT $75-$100</div>
+    <div class="step-label">STEP 03</div>
+    <h2>BE FIRST. SAVE NOW.</h2>
+    <p>Enter your info to lock in early access pricing and exclusive updates.</p>
 
     <form id="notify-form" novalidate>
-      <input id="email" name="email" type="email" placeholder="ENTER EMAIL" required />
-      <input id="phone" name="phone" type="tel" placeholder="MOBILE FOR SMS (OPTIONAL)" />
-      <button class="btn" type="submit">RESERVE NOW</button>
+      <div class="field">
+        <label for="email">EMAIL</label>
+        <input id="email" name="email" type="email" placeholder="you@example.com" required />
+      </div>
+      <div class="field">
+        <label for="phone">PHONE</label>
+        <input id="phone" name="phone" type="tel" placeholder="+1 (555) 000-0000" />
+      </div>
+      <button class="submit-btn" type="submit">CONTINUE TO PRE-ORDER →</button>
     </form>
     <div class="note">No spam. One email when we launch.</div>
     <div id="notify-msg"></div>
-
-    <div class="perks">
-      <div>Early bird pricing</div>
-      <div>First production run</div>
-      <div>Design input access</div>
-    </div>
   </div>
 </section>
 
