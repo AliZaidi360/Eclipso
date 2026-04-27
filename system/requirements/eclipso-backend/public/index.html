@@ -416,7 +416,7 @@ a { color: inherit; text-decoration: none; }
   <div class="eyebrow">02 - BUILT TO LAST</div>
   <h2 class="title">CHOOSE YOUR BUILD</h2>
   <div class="materials reveal">
-    <a class="mat" href="eclipso-payment.html?version=v1">
+    <a class="mat" href="#notify" data-version="v1" data-label="ALUMINUM EDITION">
       <img src="Aluminum.png" alt="Aluminum Build" class="build-img" />
       <div class="watermark">V1</div>
       <div class="eyebrow">VERSION 01</div>
@@ -429,7 +429,7 @@ a { color: inherit; text-decoration: none; }
       </ul>
       <div class="badge">SELECT ALUMINUM →</div>
     </a>
-    <a class="mat ti" href="eclipso-payment.html?version=v2">
+    <a class="mat ti" href="#notify" data-version="v2" data-label="TITANIUM EDITION">
       <img src="Titaniium.png" alt="Titanium Build" class="build-img" />
       <div class="watermark">V2</div>
       <div class="eyebrow">VERSION 02</div>
@@ -450,6 +450,8 @@ a { color: inherit; text-decoration: none; }
     <div class="step-label">STEP 03</div>
     <h2>BE FIRST. SAVE NOW.</h2>
     <p>Enter your info to lock in early access pricing and exclusive updates.</p>
+
+    <div id="selected-build" style="display:none; margin-top:1rem; font-family:'DM Mono',monospace; font-size:0.75rem; color:var(--accent); letter-spacing:0.08em;"></div>
 
     <form id="notify-form" novalidate>
       <div class="field">
@@ -503,6 +505,18 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
+let selectedVersion = "v1";
+
+document.querySelectorAll(".mat[data-version]").forEach((card) => {
+  card.addEventListener("click", () => {
+    selectedVersion = card.dataset.version;
+    const label = card.dataset.label;
+    const indicator = document.getElementById("selected-build");
+    indicator.style.display = "block";
+    indicator.textContent = `✓ SELECTED: ${label}`;
+  });
+});
+
 document.getElementById("notify-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const email = document.getElementById("email").value.trim();
@@ -525,7 +539,7 @@ document.getElementById("notify-form").addEventListener("submit", async (e) => {
     if (!res.ok) throw new Error("Request failed");
     msg.style.color = "var(--silver)";
     msg.textContent = "Taking you to checkout...";
-    window.location.href = `eclipso-payment.html?email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}`;
+    window.location.href = `eclipso-payment.html?version=${selectedVersion}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}`;
   } catch (err) {
     msg.style.color = "var(--red)";
     msg.textContent = "Unable to submit right now. Please try again.";

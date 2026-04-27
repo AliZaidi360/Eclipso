@@ -487,6 +487,9 @@
       if (params.get("phone")) {
         document.getElementById("phone").value = params.get("phone");
       }
+      if (params.get("version") === "v2") {
+        setVersion("v2", "1.99");
+      }
     });
 
     let selectedVersion = "v1";
