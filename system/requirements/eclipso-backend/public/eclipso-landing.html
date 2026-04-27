@@ -570,6 +570,9 @@
       color: var(--silver);
     }
 
+    .build-img { width: 100%; height: 220px; object-fit: cover; display: block; margin-bottom: 1rem; filter: brightness(0.92) contrast(1.05); }
+    .mat { cursor: pointer; text-decoration: none; color: inherit; display: block; transition: outline 0.15s; outline: 2px solid transparent; }
+    .mat:hover { outline: 2px solid var(--accent); }
     .mat h3 {
       font-family: "Bebas Neue", sans-serif;
       font-size: 2.2rem;
@@ -866,7 +869,8 @@
     <div class="eyebrow">// 02 - BUILT TO LAST</div>
     <h2 class="title">CHOOSE YOUR BUILD</h2>
     <div class="materials reveal">
-      <article class="mat">
+      <a class="mat" href="eclipso-payment.html?version=v1">
+        <img src="Aluminum.png" alt="Aluminum Build" class="build-img" />
         <div class="watermark">V1</div>
         <div class="eyebrow">VERSION 01</div>
         <h3>ALUMINUM EDITION</h3>
@@ -876,9 +880,10 @@
           <li>Lighter daily carry weight</li>
           <li>Corrosion-resistant shell</li>
         </ul>
-        <div class="badge">STANDARD BUILD</div>
-      </article>
-      <article class="mat ti">
+        <div class="badge">SELECT ALUMINUM →</div>
+      </a>
+      <a class="mat ti" href="eclipso-payment.html?version=v2">
+        <img src="Titaniium.png" alt="Titanium Build" class="build-img" />
         <div class="watermark">V2</div>
         <div class="eyebrow">VERSION 02</div>
         <h3>TITANIUM EDITION</h3>
@@ -888,8 +893,8 @@
           <li>Premium strength-to-weight ratio</li>
           <li>High-end tactical finish</li>
         </ul>
-        <div class="badge silver">TITANIUM BUILD</div>
-      </article>
+        <div class="badge silver">SELECT TITANIUM →</div>
+      </a>
     </div>
   </section>
 
