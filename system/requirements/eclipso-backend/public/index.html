@@ -275,9 +275,8 @@ a { color: inherit; text-decoration: none; }
 .strip-tool.active svg { stroke: var(--accent); }
 .strip-tool.active .strip-name { color: var(--accent); }
 
-/* Video */
-.video-section { border-bottom: 1px solid var(--steel); padding: 3rem 0; display: flex; justify-content: center; background: var(--black); }
-.video-section video { width: 100%; max-width: 500px; border: 1px solid var(--steel); display: block; }
+.tools-video-wrap { display: flex; justify-content: center; padding: 1.5rem 0 2rem; }
+.tools-video-wrap video { width: 100%; max-width: 480px; border: 1px solid var(--steel); display: block; }
 .reveal { opacity: 0; transform: translateY(18px); transition: 0.65s; }
 .reveal.show { opacity: 1; transform: translateY(0); }
 .materials { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--steel); }
@@ -432,17 +431,10 @@ a { color: inherit; text-decoration: none; }
   <div class="wrapper">
     <div class="tools-eyebrow">STEP 01</div>
     <div class="tools-heading">5 TOOLS, ONE ROTATION</div>
-
-    <div class="tools-featured">
-      <div class="tool-icon-box">
-        <svg id="feat-icon" viewBox="0 0 24 24"><path d="M4 20 L20 4"/><path d="M7 17 L17 7"/></svg>
-      </div>
-      <div class="feat-name" id="feat-name">BLADE</div>
-      <div class="feat-desc" id="feat-desc">Precision cutting edge</div>
-    </div>
-
-    <div class="tools-dots" id="tools-dots">
-      <span class="active"></span><span></span><span></span><span></span><span></span>
+    <div class="tools-video-wrap">
+      <video autoplay muted loop playsinline>
+        <source src="geo-tools.mp4" type="video/mp4" />
+      </video>
     </div>
   </div>
 
@@ -473,12 +465,6 @@ a { color: inherit; text-decoration: none; }
       <div class="strip-desc">Multi-use leverage tool</div>
     </div>
   </div>
-</section>
-
-<section class="video-section">
-  <video autoplay muted loop playsinline>
-    <source src="geo-tools.mp4" type="video/mp4" />
-  </video>
 </section>
 
 <section class="section wrapper">
@@ -547,35 +533,6 @@ a { color: inherit; text-decoration: none; }
 </footer>
 
 <script>
-// Tools carousel
-const tools = [
-  { name: "BLADE",        desc: "Precision cutting edge",    svg: '<path d="M4 20 L20 4"/><path d="M7 17 L17 7"/>' },
-  { name: "SCREWDRIVER",  desc: "Flathead & Phillips",       svg: '<path d="M7 12 h10"/><circle cx="6" cy="12" r="2"/><path d="M17 7 v10"/>' },
-  { name: "BOTTLE OPENER",desc: "Built-in leverage",         svg: '<path d="M7 12 h10"/><circle cx="6" cy="12" r="2"/><path d="M17 7 v4"/>' },
-  { name: "FILE",         desc: "Fine metal finishing",      svg: '<rect x="6" y="4" width="12" height="16"/><path d="M9 9h6M9 13h4"/>' },
-  { name: "PRY BAR",      desc: "Multi-use leverage tool",   svg: '<path d="M4 12 h12"/><path d="M14 8 l4 4 -4 4"/>' },
-];
-
-let activeTool = 0;
-
-function setTool(i) {
-  activeTool = i;
-  const t = tools[i];
-  document.getElementById("feat-icon").innerHTML = t.svg;
-  document.getElementById("feat-name").textContent = t.name;
-  document.getElementById("feat-desc").textContent = t.desc;
-  document.querySelectorAll("#tools-dots span").forEach((d, j) => d.classList.toggle("active", j === i));
-  document.querySelectorAll("#tools-strip .strip-tool").forEach((s, j) => s.classList.toggle("active", j === i));
-}
-
-document.querySelectorAll("#tools-strip .strip-tool").forEach((el) => {
-  el.addEventListener("click", () => setTool(parseInt(el.dataset.i)));
-});
-document.querySelectorAll("#tools-dots span").forEach((dot, i) => {
-  dot.addEventListener("click", () => setTool(i));
-});
-
-setInterval(() => setTool((activeTool + 1) % tools.length), 3000);
 
 const BACKEND_URL = "https://eclipso-production.up.railway.app";
 
