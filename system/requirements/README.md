@@ -2,7 +2,7 @@
 
 This repository contains the pre-launch web system for the ECLIPSO multitool product. Below is a summary of work completed so far and the remaining tasks for the team.
 
-## ✅ Completed Work
+## ✅ Completed Works
 
 - **Landing Page (`eclipso-landing.html`)**
   - Fully styled with dark tactical design and branded typography.
