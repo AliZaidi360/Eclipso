@@ -1,360 +1,269 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GEOEDC | Reserve</title>
+  <title>GEOEDC | Secure Checkout</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;500;700&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;500;700&display=swap" rel="stylesheet" />
   <script src="https://js.stripe.com/v3/"></script>
   <style>
     :root {
-      --black: #070708;
-      --deep: #0d0d0f;
-      --carbon: #141417;
-      --iron: #1e1e23;
-      --steel: #2e2e36;
-      --ash: #6a6a78;
-      --silver: #b0b0be;
-      --light: #e8e8f0;
-      --white: #f4f4f8;
-      --accent: #e8c44a;
-      --green: #2ecc71;
-      --red: #e74c3c;
+      --bg:      #f6f5f1;
+      --bg2:     #eeecea;
+      --white:   #ffffff;
+      --dark:    #111111;
+      --mid:     #3a3a3a;
+      --muted:   #777777;
+      --border:  #d4d2cc;
+      --accent:  #c9a830;
+      --green:   #2d8a55;
+      --red:     #c0392b;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      border-radius: 0 !important;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      cursor: crosshair;
-      min-height: 100vh;
-      background: var(--black);
-      color: var(--light);
       font-family: "Barlow Condensed", sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      line-height: 1.4;
+      font-size: 1.05rem;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.08;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
-    }
+    a { color: inherit; text-decoration: none; }
 
+    /* ── LAYOUT ── */
     .layout {
       display: grid;
       grid-template-columns: 1fr 1fr;
       min-height: 100vh;
     }
 
-    .left {
-      position: sticky;
-      top: 0;
-      align-self: start;
-      height: 100vh;
-      border-right: 1px solid var(--steel);
-      padding: 2rem;
-      background: linear-gradient(160deg, #131317, #0a0a0c);
+    /* ── LEFT PANEL ── */
+    .panel-left {
+      background: var(--white);
+      border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      padding: 2.5rem;
+      gap: 1.4rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
     }
 
     .back {
       font-family: "DM Mono", monospace;
-      font-size: 0.78rem;
-      color: var(--silver);
-      text-decoration: none;
+      font-size: .8rem;
+      color: var(--muted);
     }
+    .back:hover { color: var(--dark); }
 
     .logo {
       font-family: "Bebas Neue", sans-serif;
-      font-size: 2.2rem;
-      letter-spacing: 0.08em;
+      font-size: 2rem;
+      letter-spacing: .08em;
+    }
+    .logo span { color: var(--accent); }
+
+    .product-img {
+      width: 100%;
+      max-height: 260px;
+      object-fit: contain;
+      display: block;
     }
 
-    .logo b {
-      color: var(--accent);
-      font-weight: 400;
-    }
-
-    .toggle {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: var(--steel);
-    }
-
-    .toggle button {
-      appearance: none;
-      border: 0;
-      background: var(--carbon);
-      color: var(--silver);
-      padding: 0.9rem 0.6rem;
+    .build-label {
       font-family: "DM Mono", monospace;
-      font-size: 0.72rem;
+      font-size: .78rem;
+      color: var(--muted);
       text-transform: uppercase;
-      border-top: 2px solid transparent;
-      cursor: pointer;
+      letter-spacing: .06em;
+    }
+    .build-name {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.6rem;
+      margin-top: .2rem;
     }
 
-    .toggle button.active {
-      color: var(--light);
-      border-top-color: var(--accent);
-      background: #1b1b21;
-    }
-
-    .ring-area {
-      position: relative;
-      width: 280px;
-      height: 280px;
-      margin: 0.8rem auto 0.4rem;
-      display: grid;
-      place-items: center;
-    }
-
-    .ring {
-      position: absolute;
-      border: 1px solid var(--steel);
-      border-radius: 50% !important;
-    }
-
-    .outer {
-      width: 280px;
-      height: 280px;
-      animation: spin 20s linear infinite;
-    }
-
-    .mid {
-      width: 210px;
-      height: 210px;
-      animation: spinr 14s linear infinite;
-    }
-
-    .inner {
-      width: 156px;
-      height: 156px;
-      animation: spin 8s linear infinite;
-    }
-
-    .outer::before {
-      content: "";
-      position: absolute;
-      top: -4px;
-      left: 50%;
-      width: 8px;
-      height: 8px;
-      background: var(--accent);
-      transform: translateX(-50%);
-    }
-
-    .core {
-      width: 104px;
-      height: 104px;
-      border-radius: 50% !important;
-      border: 1px solid var(--steel);
-      background: #121216;
-      display: grid;
-      place-items: center;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    @keyframes spinr {
-      to {
-        transform: rotate(-360deg);
-      }
-    }
-
-    .list-title {
+    .what-you-get {
       font-family: "DM Mono", monospace;
-      font-size: 0.74rem;
-      color: var(--silver);
-      letter-spacing: 0.07em;
+      font-size: .78rem;
     }
-
-    ul {
-      padding-left: 1.1rem;
-      color: var(--silver);
+    .what-you-get .label {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: .6rem;
+    }
+    .what-you-get ul {
+      list-style: none;
       display: grid;
-      gap: 0.34rem;
+      gap: .4rem;
+      color: var(--mid);
     }
+    .what-you-get li::before { content: "— "; color: var(--accent); }
 
-    .summary {
-      margin-top: auto;
-      border-top: 1px solid var(--steel);
+    .price-summary {
+      border-top: 1px solid var(--border);
       padding-top: 1rem;
       font-family: "DM Mono", monospace;
-      font-size: 0.78rem;
+      font-size: .82rem;
+      margin-top: auto;
     }
-
-    .summary .row {
+    .price-row {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 0.45rem;
-      color: var(--silver);
+      color: var(--muted);
+      margin-bottom: .4rem;
     }
-
-    .summary .total {
+    .price-total {
       display: flex;
       justify-content: space-between;
-      align-items: end;
-      border-top: 1px solid var(--steel);
-      padding-top: 0.6rem;
-      margin-top: 0.5rem;
+      align-items: flex-end;
+      border-top: 1px solid var(--border);
+      padding-top: .7rem;
+      margin-top: .5rem;
     }
-
-    .summary .amount {
+    .price-amount {
       font-family: "Bebas Neue", sans-serif;
-      font-size: 2.5rem;
-      line-height: 1;
+      font-size: 2.8rem;
       color: var(--accent);
+      line-height: 1;
     }
 
-    .right {
-      padding: 3rem 2.3rem;
+    /* ── RIGHT PANEL ── */
+    .panel-right {
+      padding: 3rem 2.5rem;
       overflow-y: auto;
     }
 
     .eyebrow {
       font-family: "DM Mono", monospace;
-      color: var(--silver);
-      font-size: 0.8rem;
+      font-size: .8rem;
+      color: var(--muted);
+      letter-spacing: .07em;
+      text-transform: uppercase;
     }
 
     h1 {
-      margin-top: 0.6rem;
       font-family: "Bebas Neue", sans-serif;
-      font-size: clamp(2.8rem, 8vw, 5.3rem);
-      line-height: 0.9;
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      line-height: .9;
+      margin-top: .5rem;
     }
 
     .subtitle {
-      margin-top: 0.6rem;
-      color: var(--silver);
-      max-width: 46ch;
+      color: var(--mid);
+      font-size: clamp(1rem, 1.8vw, 1.15rem);
+      margin-top: .8rem;
+      max-width: 44ch;
     }
 
-    form {
-      margin-top: 1.5rem;
+    /* ── FORM ── */
+    .checkout-form {
+      margin-top: 1.8rem;
       display: grid;
-      gap: 0.85rem;
-      max-width: 560px;
+      gap: 1rem;
+      max-width: 480px;
     }
 
     label {
+      display: block;
       font-family: "DM Mono", monospace;
-      font-size: 0.74rem;
-      color: var(--silver);
+      font-size: .78rem;
+      color: var(--muted);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: .05em;
     }
 
-    input,
+    label input,
     #card-element {
-      margin-top: 0.33rem;
+      display: block;
       width: 100%;
-      padding: 0.86rem;
-      border: 1px solid var(--steel);
-      background: var(--iron);
-      color: var(--light);
-      font-family: "DM Mono", monospace;
-      font-size: 0.88rem;
-    }
-
-    input:focus {
-      border-color: var(--accent);
+      margin-top: .35rem;
+      padding: .9rem 1rem;
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 1.1rem;
+      border: 2px solid var(--border);
+      background: var(--white);
+      color: var(--dark);
       outline: none;
+      transition: border-color .15s;
+    }
+    label input:focus { border-color: var(--dark); }
+
+    #card-element {
+      background: var(--white);
+      padding: 1rem;
     }
 
     #error {
-      min-height: 46px;
-      border: 1px solid transparent;
-      color: var(--red);
       font-family: "DM Mono", monospace;
-      font-size: 0.78rem;
-      padding: 0.7rem;
+      font-size: .82rem;
+      color: var(--red);
+      padding: .7rem 1rem;
+      border: 2px solid transparent;
+      min-height: 46px;
     }
-
     #error.show {
       border-color: var(--red);
-      background: rgba(231, 76, 60, 0.08);
+      background: rgba(192,57,43,.06);
     }
 
     #submit {
-      margin-top: 0.3rem;
-      appearance: none;
-      border: 1px solid var(--accent);
-      background: var(--accent);
-      color: var(--black);
-      font-family: "DM Mono", monospace;
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      padding: 0.93rem;
+      width: 100%;
+      padding: 1.1rem;
+      background: var(--dark);
+      color: var(--white);
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: .07em;
+      border: 2px solid var(--dark);
       cursor: pointer;
+      transition: .2s;
+      margin-top: .4rem;
     }
+    #submit:hover { background: var(--accent); border-color: var(--accent); color: var(--dark); }
+    #submit:disabled { opacity: .6; cursor: wait; }
 
-    #submit[disabled] {
-      opacity: 0.6;
-      cursor: wait;
-    }
-
-    .security {
-      margin-top: 0.7rem;
+    .security-row {
       display: flex;
-      gap: 0.8rem;
+      gap: 1.2rem;
       flex-wrap: wrap;
-      color: var(--silver);
       font-family: "DM Mono", monospace;
-      font-size: 0.72rem;
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: .6rem;
     }
 
+    /* ── SUCCESS ── */
     #success {
       display: none;
-      border: 1px solid var(--steel);
-      margin-top: 1.1rem;
-      padding: 1rem;
-      max-width: 560px;
+      border: 2px solid var(--border);
+      padding: 2rem;
+      max-width: 480px;
+      margin-top: 1.5rem;
     }
 
     .check {
-      width: 54px;
-      height: 54px;
-      border: 1px solid var(--green);
+      width: 56px;
+      height: 56px;
+      border: 2px solid var(--green);
       color: var(--green);
       display: grid;
       place-items: center;
       font-size: 1.8rem;
-      margin-bottom: 0.8rem;
-      animation: pop 0.6s ease;
+      margin-bottom: .8rem;
+      animation: pop .5s ease;
     }
 
     @keyframes pop {
-      from {
-        transform: scale(0.7);
-        opacity: 0;
-      }
-
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
+      from { transform: scale(.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
     #success h2 {
@@ -366,256 +275,235 @@
     #order-id {
       font-family: "DM Mono", monospace;
       color: var(--accent);
-      margin-top: 0.5rem;
+      margin-top: .5rem;
+      font-size: .85rem;
     }
 
     #success a {
       color: var(--accent);
       display: inline-block;
-      margin-top: 0.8rem;
+      margin-top: 1rem;
       font-family: "DM Mono", monospace;
+      font-size: .85rem;
     }
 
     .spinner {
       width: 12px;
       height: 12px;
-      border: 2px solid rgba(7, 7, 8, 0.4);
-      border-top-color: var(--black);
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: var(--white);
       display: inline-block;
-      margin-right: 0.4rem;
-      animation: spin 0.8s linear infinite;
+      margin-right: .4rem;
+      animation: spin .8s linear infinite;
     }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    @media (max-width: 990px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .left {
-        position: static;
-        height: auto;
-      }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+      .panel-left { position: static; height: auto; }
+    }
+    @media (max-width: 520px) {
+      .panel-left, .panel-right { padding: 1.5rem; }
     }
   </style>
 </head>
-
 <body>
-  <div class="layout">
-    <aside class="left">
-      <a class="back" href="index.html"><- BACK TO GEOEDC</a>
-          <div class="logo">GE<b>O</b>EDC</div>
 
-          <div class="toggle">
-            <button id="v1" class="active" type="button" data-version="v1" data-price="1.99">V1
-              ALUMINUM<br />$1.99</button>
-            <button id="v2" type="button" data-version="v2" data-price="1.99">V2 TITANIUM<br />$1.99</button>
-          </div>
+<div class="layout">
 
-          <div class="ring-area">
-            <div class="ring outer"></div>
-            <div class="ring mid"></div>
-            <div class="ring inner"></div>
-            <div class="core">
-              <svg width="56" height="56" viewBox="0 0 72 72" fill="none" stroke="#e8c44a" stroke-width="2">
-                <circle cx="36" cy="36" r="7" />
-                <path d="M36 11 L40 24 L32 24 Z" />
-                <path d="M36 61 L41 49 L31 49 Z" />
-                <path d="M61 36 L49 40 L49 31 Z" />
-                <path d="M11 36 L23 41 L23 31 Z" />
-                <circle cx="36" cy="7" r="4" />
-              </svg>
-            </div>
-          </div>
+  <!-- LEFT: Product summary -->
+  <aside class="panel-left">
+    <a class="back" href="eclipso-preorder.html">&#8592; Back to Reserve</a>
+    <div class="logo">GE<span>O</span>EDC</div>
 
-          <div class="list-title">WHAT YOU GET</div>
-          <ul>
-            <li>GEOEDC EDC Multitool (chosen build)</li>
-            <li>Blade - Bottle Opener - Wire Cutter</li>
-            <li>Screwdriver/Pry - Box Opener</li>
-            <li>First production run - ships before retail</li>
-            <li>Backer-exclusive early bird pricing</li>
-            <li>Email updates through Kickstarter launch</li>
-          </ul>
+    <img class="product-img" id="product-img" src="Aluminum.png" alt="GEOEDC Multitool" onerror="this.style.display='none'" />
 
-          <div class="summary">
-            <div class="row"><span>Reservation fee</span><span id="unit">$1.99</span></div>
-            <div class="row"><span>Shipping</span><span>Calculated at launch</span></div>
-            <div class="total"><span>Total today</span><span class="amount" id="total">$1.99</span></div>
-          </div>
-    </aside>
+    <div>
+      <div class="build-label">Your Selected Build</div>
+      <div class="build-name" id="build-name">V1 — ALUMINUM EDITION</div>
+    </div>
 
-    <main class="right">
-      <div class="eyebrow">SECURE PRE-ORDER</div>
-      <h1>RESERVE YOURS.</h1>
-      <p class="subtitle">Lock your early bird pricing now. Payment is securely processed by Stripe.</p>
+    <div class="what-you-get">
+      <div class="label">WHAT YOU GET</div>
+      <ul>
+        <li>GEOEDC EDC Multitool (your chosen build)</li>
+        <li>Blade, Bottle Opener, Wire Cutter</li>
+        <li>Screwdriver/Pry &amp; Box Opener</li>
+        <li>First production run — ships before retail</li>
+        <li>Backer-exclusive early bird pricing</li>
+        <li>Kickstarter launch updates via email</li>
+      </ul>
+    </div>
 
-      <form id="checkout-form" novalidate>
-        <label>Email Address<input id="email" type="email" required /></label>
-        <label>Mobile Number (SMS)<input id="phone" type="tel" /></label>
-        <label>Full Name<input id="name" type="text" required /></label>
-        <label>Card Details<div id="card-element"></div></label>
+    <div class="price-summary">
+      <div class="price-row"><span>Reservation deposit</span><span>$1.99</span></div>
+      <div class="price-row"><span>Shipping</span><span>Calculated at launch</span></div>
+      <div class="price-total">
+        <span>Total today</span>
+        <span class="price-amount">$1.99</span>
+      </div>
+    </div>
+  </aside>
 
-        <div id="error"></div>
-        <button id="submit" type="submit">RESERVE FOR $1.99</button>
+  <!-- RIGHT: Stripe checkout -->
+  <main class="panel-right">
+    <div class="eyebrow">// STEP 3 OF 3 — SECURE PAYMENT</div>
+    <h1>RESERVE<br>YOURS.</h1>
+    <p class="subtitle">Complete your $1.99 reservation deposit. Securely processed by Stripe — we never store your card details.</p>
 
-        <div class="security">
-          <span>SSL Secured</span>
-          <span>Powered by Stripe</span>
-          <span>No hidden fees</span>
-        </div>
-      </form>
+    <form class="checkout-form" id="checkout-form" novalidate>
+      <label>
+        Email Address
+        <input type="email" id="email" required />
+      </label>
+      <label>
+        Full Name
+        <input type="text" id="name" required />
+      </label>
+      <label>
+        Card Details
+        <div id="card-element"></div>
+      </label>
 
-      <section id="success">
-        <div class="check">✓</div>
-        <h2>YOU'RE IN.</h2>
-        <p>Your reservation is confirmed. A receipt has been emailed to you.</p>
-        <p id="order-id"></p>
-        <a href="index.html">Back to GEOEDC</a>
-      </section>
-    </main>
-  </div>
+      <div id="error"></div>
+      <button id="submit" type="submit">RESERVE FOR $1.99</button>
 
-  <script>
-    const STRIPE_PK = "pk_test_51TDudBLcBs0EYr3pMmeH9JB15lqZ7EMBPMfnGJxH08MOwpDQxRPtNNJLyW7cQV7XsEJ1ZxoONG0BPRSebUh4Vaqq00WPTZ7ooc";
-    const BACKEND_URL = "https://eclipso-production.up.railway.app";
+      <div class="security-row">
+        <span>&#128274; SSL Secured</span>
+        <span>Powered by Stripe</span>
+        <span>No hidden fees</span>
+      </div>
+    </form>
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("email")) {
-        document.getElementById("email").value = params.get("email");
-      }
-      if (params.get("phone")) {
-        document.getElementById("phone").value = params.get("phone");
-      }
-    });
+    <section id="success">
+      <div class="check">&#10003;</div>
+      <h2>YOU'RE IN.</h2>
+      <p>Your reservation is confirmed. A receipt will be emailed to you.</p>
+      <p id="order-id"></p>
+      <a href="eclipso-landing.html">&#8592; Back to GEOEDC</a>
+    </section>
+  </main>
 
-    let selectedVersion = "v1";
-    let selectedPrice = 1.99;
+</div>
 
-    const stripe = Stripe(STRIPE_PK);
-    const elements = stripe.elements({
-      appearance: {
-        theme: "night",
-        variables: {
-          colorPrimary: "#e8c44a",
-          colorBackground: "#1e1e23",
-          colorText: "#e8e8f0",
-          fontFamily: '"DM Mono", monospace',
-          borderRadius: "0px"
-        }
-      }
-    });
+<script>
+  const STRIPE_PK = "pk_test_51TDudBLcBs0EYr3pMmeH9JB15lqZ7EMBPMfnGJxH08MOwpDQxRPtNNJLyW7cQV7XsEJ1ZxoONG0BPRSebUh4Vaqq00WPTZ7ooc";
+  const BACKEND_URL = "https://eclipso-production.up.railway.app";
 
-    const card = elements.create("card", {
-      style: {
-        base: {
-          color: "#e8e8f0",
-          fontFamily: '"DM Mono", monospace',
-          fontSize: "14px",
-          iconColor: "#e8c44a",
-          "::placeholder": { color: "#6a6a78" }
-        }
-      }
-    });
-    card.mount("#card-element");
+  let selectedVersion = "v1";
 
-    function setVersion(version, price) {
-      selectedVersion = version;
-      selectedPrice = parseFloat(price);
-      const priceStr = `$${selectedPrice}`;
-      document.getElementById("unit").textContent = priceStr;
-      document.getElementById("total").textContent = priceStr;
-      document.getElementById("submit").textContent = `RESERVE FOR ${priceStr}`;
-      document.getElementById("v1").classList.toggle("active", version === "v1");
-      document.getElementById("v2").classList.toggle("active", version === "v2");
+  window.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("email")) document.getElementById("email").value = params.get("email");
+    if (params.get("name"))  document.getElementById("name").value  = params.get("name");
+
+    const v = params.get("version") || "v1";
+    selectedVersion = (v === "v2") ? "v2" : "v1";
+
+    const imgEl = document.getElementById("product-img");
+    const nameEl = document.getElementById("build-name");
+    if (selectedVersion === "v2") {
+      imgEl.src = "Titaniium.png";
+      nameEl.textContent = "V2 — TITANIUM EDITION";
+    } else {
+      imgEl.src = "Aluminum.png";
+      nameEl.textContent = "V1 — ALUMINUM EDITION";
     }
+  });
 
-    document.getElementById("v1").addEventListener("click", () => setVersion("v1", "1.99"));
-    document.getElementById("v2").addEventListener("click", () => setVersion("v2", "1.99"));
-
-    function showError(text) {
-      const error = document.getElementById("error");
-      error.textContent = text || "";
-      error.classList.toggle("show", Boolean(text));
+  const stripe = Stripe(STRIPE_PK);
+  const elements = stripe.elements({
+    appearance: {
+      theme: "stripe",
+      variables: {
+        colorPrimary: "#c9a830",
+        colorBackground: "#ffffff",
+        colorText: "#111111",
+        fontFamily: '"Barlow Condensed", sans-serif',
+        borderRadius: "0px"
+      }
     }
+  });
 
-    function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  const card = elements.create("card", {
+    style: {
+      base: {
+        color: "#111111",
+        fontFamily: '"Barlow Condensed", sans-serif',
+        fontSize: "16px",
+        iconColor: "#c9a830",
+        "::placeholder": { color: "#aaa" }
+      }
+    }
+  });
+  card.mount("#card-element");
 
-    function setLoading(state) {
-      const btn = document.getElementById("submit");
-      if (state) {
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner"></span>PROCESSING';
+  function showError(text) {
+    const el = document.getElementById("error");
+    el.textContent = text || "";
+    el.classList.toggle("show", Boolean(text));
+  }
+
+  function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+  function setLoading(state) {
+    const btn = document.getElementById("submit");
+    if (state) {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>PROCESSING...';
+    } else {
+      btn.disabled = false;
+      btn.textContent = "RESERVE FOR $1.99";
+    }
+  }
+
+  document.getElementById("checkout-form").addEventListener("submit", async e => {
+    e.preventDefault();
+    showError("");
+
+    const email = document.getElementById("email").value.trim();
+    const name  = document.getElementById("name").value.trim();
+
+    if (!validEmail(email)) { showError("Please enter a valid email address."); return; }
+    if (!name)               { showError("Please enter your full name."); return; }
+
+    setLoading(true);
+
+    try {
+      const intentRes = await fetch(`${BACKEND_URL}/create-payment-intent`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ version: selectedVersion, email, name })
+      });
+
+      if (!intentRes.ok) {
+        const err = await intentRes.json().catch(() => ({}));
+        throw new Error(err.error || "Unable to initialize payment.");
+      }
+
+      const { clientSecret } = await intentRes.json();
+
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: { card, billing_details: { name, email } }
+      });
+
+      if (result.error) throw new Error(result.error.message || "Payment failed.");
+
+      if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
+        const shortId = (result.paymentIntent.id || "").slice(-8).toUpperCase();
+        document.getElementById("checkout-form").style.display = "none";
+        document.getElementById("order-id").textContent = `ORDER REF: ${shortId}`;
+        document.getElementById("success").style.display = "block";
       } else {
-        btn.disabled = false;
-        btn.textContent = `RESERVE FOR $${selectedPrice}`;
+        throw new Error("Payment did not complete. Please try again.");
       }
+    } catch (err) {
+      showError(err.message || "Unable to process payment. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    document.getElementById("checkout-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      showError("");
-
-      const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const name = document.getElementById("name").value.trim();
-
-      if (!validEmail(email)) {
-        showError("Please enter a valid email address.");
-        return;
-      }
-      if (!name) {
-        showError("Please enter your full name.");
-        return;
-      }
-
-      setLoading(true);
-
-      try {
-        const intentRes = await fetch(`${BACKEND_URL}/create-payment-intent`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            version: selectedVersion,
-            email,
-            phone,
-            name,
-            amount: Math.round(selectedPrice * 100)
-          })
-        });
-
-        if (!intentRes.ok) {
-          const err = await intentRes.json().catch(() => ({}));
-          throw new Error(err.error || "Unable to initialize payment.");
-        }
-
-        const { clientSecret } = await intentRes.json();
-
-        const result = await stripe.confirmCardPayment(clientSecret, {
-          payment_method: {
-            card,
-            billing_details: { name, email }
-          }
-        });
-
-        if (result.error) throw new Error(result.error.message || "Payment failed.");
-
-        if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
-          const id = result.paymentIntent.id || "";
-          const shortId = id.slice(-8).toUpperCase();
-          document.getElementById("checkout-form").style.display = "none";
-          document.getElementById("order-id").textContent = `ORDER ID: ${shortId}`;
-          document.getElementById("success").style.display = "block";
-        } else {
-          throw new Error("Payment did not complete.");
-        }
-      } catch (err) {
-        showError(err.message || "Unable to process payment.");
-      } finally {
-        setLoading(false);
-      }
-    });
-  </script>
+  });
+</script>
 </body>
-
 </html>
