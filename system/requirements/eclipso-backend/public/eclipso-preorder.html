@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GEOEDC | Reserve Your Build</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:      #f6f5f1;
+      --bg2:     #eeecea;
+      --white:   #ffffff;
+      --dark:    #111111;
+      --mid:     #3a3a3a;
+      --muted:   #777777;
+      --border:  #d4d2cc;
+      --accent:  #c9a830;
+      --green:   #2d8a55;
+      --red:     #c0392b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Barlow Condensed", sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      line-height: 1.4;
+      font-size: 1.05rem;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── LAYOUT ── */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── LEFT PANEL: product + info ── */
+    .panel-left {
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 2.5rem;
+      gap: 1.4rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .back {
+      font-family: "DM Mono", monospace;
+      font-size: .8rem;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+    }
+    .back:hover { color: var(--dark); }
+
+    .logo {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 2rem;
+      letter-spacing: .08em;
+    }
+    .logo span { color: var(--accent); }
+
+    .product-img {
+      width: 100%;
+      max-height: 260px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .version-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+    }
+    .version-btn {
+      appearance: none;
+      border: none;
+      background: var(--bg2);
+      color: var(--muted);
+      padding: .9rem .6rem;
+      font-family: "DM Mono", monospace;
+      font-size: .78rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: .15s;
+    }
+    .version-btn.active {
+      background: var(--white);
+      color: var(--dark);
+      border-bottom-color: var(--accent);
+    }
+
+    .what-you-get {
+      font-family: "DM Mono", monospace;
+      font-size: .78rem;
+    }
+    .what-you-get .label {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: .6rem;
+    }
+    .what-you-get ul {
+      list-style: none;
+      display: grid;
+      gap: .4rem;
+      color: var(--mid);
+    }
+    .what-you-get li::before { content: "— "; color: var(--accent); }
+
+    .price-summary {
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      font-family: "DM Mono", monospace;
+      font-size: .82rem;
+    }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      margin-bottom: .4rem;
+    }
+    .price-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid var(--border);
+      padding-top: .7rem;
+      margin-top: .5rem;
+    }
+    .price-amount {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 2.8rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    /* ── RIGHT PANEL: form ── */
+    .panel-right {
+      padding: 3rem 2.5rem;
+      overflow-y: auto;
+    }
+
+    .eyebrow {
+      font-family: "DM Mono", monospace;
+      font-size: .8rem;
+      color: var(--muted);
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      line-height: .9;
+      margin-top: .5rem;
+    }
+
+    .subtitle {
+      color: var(--mid);
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+      margin-top: .8rem;
+      max-width: 44ch;
+    }
+
+    .incentive {
+      display: inline-block;
+      background: var(--dark);
+      color: var(--white);
+      font-family: "DM Mono", monospace;
+      font-size: .78rem;
+      padding: .5rem 1rem;
+      margin-top: 1.2rem;
+      letter-spacing: .04em;
+    }
+    .incentive em { color: var(--accent); font-style: normal; }
+
+    /* ── FORM ── */
+    .reserve-form {
+      margin-top: 1.8rem;
+      display: grid;
+      gap: 1rem;
+      max-width: 480px;
+    }
+
+    label {
+      display: block;
+      font-family: "DM Mono", monospace;
+      font-size: .78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    label input {
+      display: block;
+      width: 100%;
+      margin-top: .35rem;
+      padding: .9rem 1rem;
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 1.1rem;
+      border: 2px solid var(--border);
+      background: var(--white);
+      color: var(--dark);
+      outline: none;
+      transition: border-color .15s;
+    }
+    label input:focus { border-color: var(--dark); }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1.1rem;
+      background: var(--dark);
+      color: var(--white);
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: .07em;
+      border: 2px solid var(--dark);
+      cursor: pointer;
+      transition: .2s;
+      margin-top: .4rem;
+    }
+    .submit-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--dark); }
+    .submit-btn:disabled { opacity: .6; cursor: wait; }
+
+    .security-row {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      font-family: "DM Mono", monospace;
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: .6rem;
+    }
+
+    #form-msg {
+      font-family: "DM Mono", monospace;
+      font-size: .85rem;
+      min-height: 1.2rem;
+      margin-top: .4rem;
+    }
+
+    /* ── FAQ ── */
+    .faq {
+      margin-top: 3rem;
+      max-width: 520px;
+    }
+    .faq h2 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 2.2rem;
+      margin-bottom: 1.2rem;
+    }
+    .faq-item {
+      border-top: 1px solid var(--border);
+      padding: 1rem 0;
+    }
+    .faq-q {
+      font-family: "DM Mono", monospace;
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--dark);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .faq-q .chevron { font-size: .7rem; transition: transform .2s; }
+    .faq-a {
+      color: var(--mid);
+      font-size: 1rem;
+      margin-top: .6rem;
+      display: none;
+    }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .chevron { transform: rotate(180deg); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+      .panel-left {
+        position: static;
+        height: auto;
+      }
+    }
+    @media (max-width: 520px) {
+      .panel-left, .panel-right { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- LEFT: Product info -->
+  <aside class="panel-left">
+    <a class="back" href="eclipso-landing.html">&#8592; Back to GEOEDC</a>
+    <div class="logo">GE<span>O</span>EDC</div>
+
+    <img class="product-img" id="product-img" src="Aluminum.png" alt="GEOEDC Multitool" onerror="this.style.display='none'" />
+
+    <div class="version-toggle">
+      <button class="version-btn active" id="btn-v1" data-version="v1" type="button">
+        V1 ALUMINUM<br />$1.99
+      </button>
+      <button class="version-btn" id="btn-v2" data-version="v2" type="button">
+        V2 TITANIUM<br />$1.99
+      </button>
+    </div>
+
+    <div class="what-you-get">
+      <div class="label">WHAT YOU GET</div>
+      <ul>
+        <li>GEOEDC EDC Multitool (your chosen build)</li>
+        <li>Blade, Bottle Opener, Wire Cutter</li>
+        <li>Screwdriver/Pry &amp; Box Opener</li>
+        <li>First production run — ships before retail</li>
+        <li>Backer-exclusive early bird pricing</li>
+        <li>Kickstarter launch updates via email</li>
+      </ul>
+    </div>
+
+    <div class="price-summary">
+      <div class="price-row"><span>Reservation deposit</span><span id="unit-price">$1.99</span></div>
+      <div class="price-row"><span>Shipping</span><span>Calculated at launch</span></div>
+      <div class="price-total">
+        <span>Total today</span>
+        <span class="price-amount" id="total-price">$1.99</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RIGHT: Form -->
+  <main class="panel-right">
+    <div class="eyebrow">// STEP 2 OF 3 — RESERVE YOUR BUILD</div>
+    <h1>LOCK YOUR<br>SPOT.</h1>
+    <p class="subtitle">Confirm your email and choose your build. You'll be taken to payment to complete your $1.99 reservation.</p>
+
+    <div class="incentive">
+      <em>EARLY BIRD PRICING</em> — Final retail: $75–$100. You pay less as a backer.
+    </div>
+
+    <form class="reserve-form" id="reserve-form" novalidate>
+      <label>
+        Email Address
+        <input type="email" id="email" placeholder="you@example.com" required />
+      </label>
+      <label>
+        Full Name
+        <input type="text" id="name" placeholder="Your full name" required />
+      </label>
+
+      <button class="submit-btn" type="submit" id="submit-btn">PROCEED TO PAYMENT — $1.99</button>
+      <div class="security-row">
+        <span>&#128274; SSL Secured</span>
+        <span>Powered by Stripe</span>
+        <span>No hidden fees</span>
+      </div>
+      <div id="form-msg"></div>
+    </form>
+
+    <!-- FAQs -->
+    <div class="faq">
+      <h2>FREQUENTLY ASKED</h2>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          What is the $1.99 deposit for?
+          <span class="chevron">&#9660;</span>
+        </div>
+        <div class="faq-a">It reserves your place in the first production run and locks in your early-bird price. The full product cost ($75–$100) will be charged at Kickstarter launch. Your $1.99 is credited to your final total.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          When does the product ship?
+          <span class="chevron">&#9660;</span>
+        </div>
+        <div class="faq-a">We're targeting shipment ahead of general retail following the Kickstarter campaign. Backers from the first production run are first in line.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          What's the difference between V1 and V2?
+          <span class="chevron">&#9660;</span>
+        </div>
+        <div class="faq-a">V1 Aluminum is lighter and great for everyday carry. V2 Titanium offers maximum strength-to-weight with a premium tactical finish. Both share the same stainless steel internals and all five tools.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          Can I get a refund?
+          <span class="chevron">&#9660;</span>
+        </div>
+        <div class="faq-a">Yes. If the Kickstarter campaign doesn't meet its goal, all deposits are fully refunded. Contact us at any time before shipment for a refund.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">
+          Is my payment information secure?
+          <span class="chevron">&#9660;</span>
+        </div>
+        <div class="faq-a">Absolutely. All payments are processed by Stripe — we never store your card details. The connection is fully SSL encrypted.</div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  let selectedVersion = "v1";
+
+  // Pre-fill from URL params
+  window.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("email")) document.getElementById("email").value = params.get("email");
+
+    const v = params.get("version");
+    if (v === "v2") setVersion("v2");
+  });
+
+  function setVersion(v) {
+    selectedVersion = v;
+    document.getElementById("btn-v1").classList.toggle("active", v === "v1");
+    document.getElementById("btn-v2").classList.toggle("active", v === "v2");
+    document.getElementById("product-img").src = v === "v1" ? "Aluminum.png" : "Titaniium.png";
+  }
+
+  document.getElementById("btn-v1").addEventListener("click", () => setVersion("v1"));
+  document.getElementById("btn-v2").addEventListener("click", () => setVersion("v2"));
+
+  // FAQ accordion
+  document.querySelectorAll(".faq-q").forEach(q => {
+    q.addEventListener("click", () => {
+      const item = q.closest(".faq-item");
+      item.classList.toggle("open");
+    });
+  });
+
+  // Form submit → go to payment page
+  document.getElementById("reserve-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const email = document.getElementById("email").value.trim();
+    const name = document.getElementById("name").value.trim();
+    const msg = document.getElementById("form-msg");
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      msg.style.color = "#c0392b";
+      msg.textContent = "Please enter a valid email address.";
+      return;
+    }
+    if (!name) {
+      msg.style.color = "#c0392b";
+      msg.textContent = "Please enter your full name.";
+      return;
+    }
+
+    msg.style.color = "#777";
+    msg.textContent = "Taking you to secure payment...";
+
+    const btn = document.getElementById("submit-btn");
+    btn.disabled = true;
+    btn.textContent = "REDIRECTING...";
+
+    window.location.href = `eclipso-payment.html?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&version=${selectedVersion}`;
+  });
+</script>
+</body>
+</html>
