@@ -196,30 +196,6 @@
       max-width: 480px;
     }
 
-    label {
-      display: block;
-      font-family: "DM Mono", monospace;
-      font-size: .78rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .05em;
-    }
-
-    label input {
-      display: block;
-      width: 100%;
-      margin-top: .35rem;
-      padding: .9rem 1rem;
-      font-family: "Barlow Condensed", sans-serif;
-      font-size: 1.1rem;
-      border: 2px solid var(--border);
-      background: var(--white);
-      color: var(--dark);
-      outline: none;
-      transition: border-color .15s;
-    }
-    label input:focus { border-color: var(--dark); }
-
     .submit-btn {
       display: block;
       width: 100%;
@@ -246,13 +222,6 @@
       font-size: .72rem;
       color: var(--muted);
       margin-top: .6rem;
-    }
-
-    #form-msg {
-      font-family: "DM Mono", monospace;
-      font-size: .85rem;
-      min-height: 1.2rem;
-      margin-top: .4rem;
     }
 
     /* ── FAQ ── */
@@ -293,13 +262,11 @@
     /* ── RESPONSIVE ── */
     @media (max-width: 860px) {
       .layout { grid-template-columns: 1fr; }
-      .panel-left {
-        position: static;
-        height: auto;
-      }
+      .panel-left { position: static; height: auto; overflow-y: visible; }
     }
     @media (max-width: 520px) {
       .panel-left, .panel-right { padding: 1.5rem; }
+      .submit-btn { font-size: 1.3rem; }
     }
   </style>
 </head>
@@ -309,7 +276,7 @@
 
   <!-- LEFT: Product info -->
   <aside class="panel-left">
-    <a class="back" href="eclipso-landing.html">&#8592; Back to GEOEDC</a>
+    <a class="back" href="/">&#8592; Back to GEOEDC</a>
     <img class="logo-img" src="geo-logo.svg" alt="GEO" />
 
     <img class="product-img" id="product-img" src="Aluminum.png" alt="GEOEDC Multitool" onerror="this.style.display='none'" />

@@ -300,10 +300,12 @@
     /* ── RESPONSIVE ── */
     @media (max-width: 860px) {
       .layout { grid-template-columns: 1fr; }
-      .panel-left { position: static; height: auto; }
+      .panel-left { position: static; height: auto; overflow-y: visible; }
     }
     @media (max-width: 520px) {
       .panel-left, .panel-right { padding: 1.5rem; }
+      h1 { font-size: 2.8rem; }
+      #submit { font-size: 1.3rem; }
     }
   </style>
 </head>
@@ -347,7 +349,7 @@
 
   <!-- RIGHT: Stripe checkout -->
   <main class="panel-right">
-    <div class="eyebrow">// STEP 3 OF 3 — SECURE PAYMENT</div>
+    <div class="eyebrow">STEP 3 OF 3 — SECURE PAYMENT</div>
     <h1>RESERVE<br>YOURS.</h1>
     <p class="subtitle">Complete your $0.99 reservation deposit. Securely processed by Stripe — we never store your card details.</p>
 
@@ -380,7 +382,7 @@
       <h2>YOU'RE IN.</h2>
       <p>Your reservation is confirmed. A receipt will be emailed to you.</p>
       <p id="order-id"></p>
-      <a href="eclipso-landing.html">&#8592; Back to GEOEDC</a>
+      <a href="/">&#8592; Back to GEOEDC</a>
     </section>
   </main>
 

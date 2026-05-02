@@ -295,53 +295,6 @@
     .cta-band .cta-note { color: #555; }
     .cta-band .form-msg { color: #777; }
 
-    /* TOOLS */
-    .tools {
-      background: #f7f6f2;
-      padding: 6rem 6vw;
-    }
-
-    .tools h2 {
-      font-family: "Bebas Neue", sans-serif;
-      font-size: clamp(2.8rem, 6vw, 5rem);
-      line-height: 0.9;
-      margin-bottom: 2.5rem;
-    }
-
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 1.5rem;
-    }
-
-    .tool-item .num {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      color: #c9a830;
-      text-transform: uppercase;
-    }
-
-    .tool-item h3 {
-      font-family: "Bebas Neue", sans-serif;
-      font-size: 1.6rem;
-      margin-top: 0.4rem;
-    }
-
-    .tool-item p {
-      margin-top: 0.3rem;
-      font-size: 0.88rem;
-      color: #666;
-      line-height: 1.6;
-    }
-
-    .tool-bar {
-      width: 28px;
-      height: 2px;
-      background: #c9a830;
-      margin-top: 0.7rem;
-    }
-
     /* BUILDS */
     .builds {
       padding: 6rem 6vw;
@@ -420,6 +373,7 @@
     }
     footer .copy { font-size: 0.78rem; color: #555; }
     footer a { font-size: 0.78rem; color: #c9a830; }
+    footer .logo-img { mix-blend-mode: screen; }
 
     /* RESPONSIVE — TABLET (max 900px) */
     @media (max-width: 900px) {
@@ -445,18 +399,13 @@
       .cta-band { padding: 5rem 6vw; }
       .cta-band h2 { font-size: clamp(3rem, 10vw, 6rem); }
 
-      /* Tools 2 columns */
-      .tools { padding: 4rem 6vw; }
-      .tools-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
-
-      /* Builds single column */
       .builds { padding: 4rem 6vw; }
       .builds-grid { grid-template-columns: 1fr; max-width: 480px; }
     }
 
     /* RESPONSIVE — PHONE (max 560px) */
     @media (max-width: 560px) {
-      nav .nav-btn { display: none; }
+      nav .nav-btn { font-size: 0.95rem; padding: 0.45rem 1rem; }
 
       .hero-visual { min-height: 70vw; max-height: 340px; padding: 2rem 6vw; }
       .hero-visual img { max-width: 280px; }
@@ -476,9 +425,6 @@
       .email-row input:focus { border-color: #c9a830; }
       .email-row button { height: 52px; border-top: none; width: 100%; }
       .cta-band .email-row input { border-color: #333; }
-
-      .tools { padding: 3rem 6vw; }
-      .tools-grid { grid-template-columns: 1fr; gap: 1.5rem; }
 
       .builds { padding: 3rem 6vw; }
       .builds-grid { max-width: 100%; }
