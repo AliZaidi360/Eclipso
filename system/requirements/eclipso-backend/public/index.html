@@ -3,668 +3,649 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GEOEDC | 5 Tools. One Rotation.</title>
+  <title>GEOEDC — 5 Tools. One Rotation.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg:      #f6f5f1;
-      --bg2:     #eeecea;
-      --white:   #ffffff;
-      --dark:    #111111;
-      --mid:     #3a3a3a;
-      --muted:   #777777;
-      --border:  #d4d2cc;
-      --accent:  #c9a830;
-      --green:   #2d8a55;
-      --red:     #c0392b;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: "Barlow Condensed", sans-serif;
-      background: var(--bg);
-      color: var(--dark);
-      line-height: 1.4;
+      font-family: "Inter", sans-serif;
+      background: #fff;
+      color: #111;
       overflow-x: hidden;
-      font-size: 1.1rem;
     }
 
     a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
 
-    /* ── NAV ── */
-    .nav {
+    /* ─── NAV ─── */
+    nav {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 100;
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
-      transition: box-shadow .25s;
-    }
-    .nav.scrolled { box-shadow: 0 2px 16px rgba(0,0,0,.08); }
-    .nav-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      height: 68px;
+      z-index: 200;
+      padding: 0 5vw;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
     }
+
     .logo {
       font-family: "Bebas Neue", sans-serif;
-      font-size: 2rem;
-      letter-spacing: .08em;
+      font-size: 1.75rem;
+      letter-spacing: 0.06em;
     }
-    .logo span { color: var(--accent); }
-    .nav-cta {
-      background: var(--dark);
-      color: var(--white);
+    .logo .o { color: #c9a830; }
+
+    .nav-btn {
+      background: #111;
+      color: #fff;
       font-family: "Bebas Neue", sans-serif;
       font-size: 1.1rem;
-      letter-spacing: .06em;
-      padding: .6rem 1.6rem;
-      border: 2px solid var(--dark);
+      letter-spacing: 0.06em;
+      padding: 0.55rem 1.6rem;
+      border: none;
       cursor: pointer;
-      transition: .2s;
+      transition: background 0.2s;
     }
-    .nav-cta:hover { background: var(--accent); border-color: var(--accent); color: var(--dark); }
+    .nav-btn:hover { background: #c9a830; color: #111; }
 
-    /* ── TICKER ── */
-    .ticker {
-      margin-top: 68px;
-      background: var(--dark);
-      color: var(--white);
-      overflow: hidden;
-      padding: .5rem 0;
-    }
-    .ticker-track {
-      white-space: nowrap;
-      display: inline-block;
-      font-family: "DM Mono", monospace;
-      font-size: .78rem;
-      letter-spacing: .05em;
-      animation: ticker 22s linear infinite;
-    }
-    @keyframes ticker { to { transform: translateX(-50%); } }
-
-    /* ── HERO ── */
+    /* ─── HERO ─── */
     .hero {
+      min-height: 100vh;
+      padding-top: 64px;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      min-height: calc(100vh - 68px);
-      align-items: center;
     }
+
     .hero-text {
-      padding: 4rem 3rem 4rem 2rem;
-      max-width: 620px;
-    }
-    .eyebrow {
-      font-family: "DM Mono", monospace;
-      font-size: .8rem;
-      color: var(--muted);
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-    .hero h1 {
-      font-family: "Bebas Neue", sans-serif;
-      font-size: clamp(5rem, 11vw, 10rem);
-      line-height: .88;
-      margin-top: .6rem;
-    }
-    .hero h1 em { color: var(--accent); font-style: normal; }
-    .hero-sub {
-      font-size: clamp(1.1rem, 2.4vw, 1.4rem);
-      color: var(--mid);
-      margin-top: 1.2rem;
-      max-width: 44ch;
-    }
-    .incentive-badge {
-      display: inline-block;
-      background: var(--dark);
-      color: var(--white);
-      font-family: "DM Mono", monospace;
-      font-size: .78rem;
-      padding: .45rem .9rem;
-      margin-top: 1.4rem;
-      letter-spacing: .05em;
-    }
-    .incentive-badge span { color: var(--accent); }
-
-    /* ── SHARED FORM ── */
-    .email-form {
-      margin-top: 1.4rem;
-      display: flex;
-      max-width: 480px;
-    }
-    .email-form input[type=email] {
-      flex: 1;
-      padding: 1rem 1.2rem;
-      font-family: "Barlow Condensed", sans-serif;
-      font-size: 1.1rem;
-      border: 2px solid var(--dark);
-      border-right: none;
-      background: var(--white);
-      color: var(--dark);
-      outline: none;
-    }
-    .email-form input[type=email]:focus { border-color: var(--accent); }
-    .email-form button {
-      padding: 1rem 1.8rem;
-      background: var(--dark);
-      color: var(--white);
-      font-family: "Bebas Neue", sans-serif;
-      font-size: 1.3rem;
-      letter-spacing: .06em;
-      border: 2px solid var(--dark);
-      cursor: pointer;
-      white-space: nowrap;
-      transition: .2s;
-    }
-    .email-form button:hover { background: var(--accent); border-color: var(--accent); color: var(--dark); }
-    .form-note {
-      margin-top: .5rem;
-      font-size: .9rem;
-      color: var(--muted);
-      font-family: "DM Mono", monospace;
-    }
-    .form-msg {
-      margin-top: .6rem;
-      font-family: "DM Mono", monospace;
-      font-size: .85rem;
-      min-height: 1.2rem;
-    }
-
-    /* ── HERO IMAGE ── */
-    .hero-img {
-      background: var(--white);
-      height: 100%;
-      min-height: 540px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-left: 1px solid var(--border);
-    }
-    .hero-img img {
-      width: 82%;
-      max-width: 480px;
-      object-fit: contain;
-      display: block;
-    }
-    .img-placeholder {
-      width: 82%;
-      max-width: 460px;
-      aspect-ratio: 1;
-      border: 2px dashed var(--border);
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      color: var(--muted);
-      font-family: "DM Mono", monospace;
-      font-size: .78rem;
-      gap: .5rem;
-      text-align: center;
-    }
-    .img-placeholder svg { opacity: .3; }
-
-    /* ── SECTION WRAPPER ── */
-    .section {
-      padding: 5rem 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .section-full {
-      padding: 5rem 2rem;
-      background: var(--white);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    .section-full .inner {
-      max-width: 1200px;
-      margin: 0 auto;
+      padding: 6vw 4vw 6vw 6vw;
     }
 
-    /* ── FEATURE ROWS ── */
-    .feature-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      align-items: center;
-      border-top: 1px solid var(--border);
+    .hero-kicker {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #c9a830;
+      margin-bottom: 1.2rem;
     }
-    .feature-row:last-child { border-bottom: 1px solid var(--border); }
-    .feature-text {
-      padding: 4rem 3rem;
-    }
-    .feature-text h2 {
+
+    .hero h1 {
       font-family: "Bebas Neue", sans-serif;
-      font-size: clamp(2.8rem, 6vw, 5rem);
-      line-height: .92;
-      margin-top: .4rem;
+      font-size: clamp(5.5rem, 10vw, 10rem);
+      line-height: 0.88;
+      color: #111;
     }
-    .feature-text p {
-      font-size: clamp(1rem, 1.8vw, 1.25rem);
-      color: var(--mid);
-      margin-top: 1rem;
-      max-width: 40ch;
+
+    .hero h1 .line2 { color: #c9a830; }
+
+    .hero-desc {
+      margin-top: 1.6rem;
+      font-size: clamp(1rem, 1.4vw, 1.2rem);
+      color: #555;
+      max-width: 36ch;
+      line-height: 1.6;
     }
-    .feature-img {
-      background: var(--bg2);
+
+    /* CTA BOX */
+    .cta-box {
+      margin-top: 2.4rem;
+      background: #f7f6f2;
+      padding: 1.8rem;
+    }
+
+    .cta-incentive {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #111;
+      margin-bottom: 0.5rem;
+    }
+
+    .cta-incentive span { color: #c9a830; }
+
+    .cta-value {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+      color: #111;
+    }
+
+    .email-row {
+      display: flex;
+      height: 54px;
+    }
+
+    .email-row input {
+      flex: 1;
       height: 100%;
-      min-height: 420px;
+      padding: 0 1.1rem;
+      font-family: "Inter", sans-serif;
+      font-size: 1rem;
+      border: 2px solid #111;
+      border-right: none;
+      background: #fff;
+      color: #111;
+      outline: none;
+    }
+
+    .email-row input::placeholder { color: #aaa; }
+    .email-row input:focus { border-color: #c9a830; }
+
+    .email-row button {
+      height: 100%;
+      padding: 0 1.8rem;
+      background: #111;
+      color: #fff;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.06em;
+      border: 2px solid #111;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.2s;
+    }
+
+    .email-row button:hover { background: #c9a830; border-color: #c9a830; color: #111; }
+
+    .cta-sub {
+      margin-top: 0.7rem;
+      font-size: 0.78rem;
+      color: #888;
+    }
+
+    .form-msg {
+      margin-top: 0.5rem;
+      font-size: 0.82rem;
+      min-height: 1rem;
+      color: #888;
+    }
+
+    /* HERO IMAGE */
+    .hero-visual {
+      background: #f4f3ef;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-    .feature-img img {
-      width: 75%;
-      max-width: 360px;
-      object-fit: contain;
+      padding: 3rem;
+      min-height: 100%;
     }
 
-    /* ── MID CTA BLOCK ── */
-    .cta-block {
-      background: var(--dark);
-      color: var(--white);
-      padding: 5rem 2rem;
-      text-align: center;
-      border-top: 1px solid #222;
-    }
-    .cta-block h2 {
-      font-family: "Bebas Neue", sans-serif;
-      font-size: clamp(3rem, 8vw, 7rem);
-      line-height: .88;
-    }
-    .cta-block h2 em { color: var(--accent); font-style: normal; }
-    .cta-block p {
-      font-size: clamp(1rem, 2vw, 1.3rem);
-      color: #aaa;
-      margin-top: 1rem;
-      max-width: 46ch;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .cta-block .email-form {
-      justify-content: center;
+    .hero-visual img {
+      width: 100%;
       max-width: 520px;
-      margin: 1.6rem auto 0;
-    }
-    .cta-block .email-form input[type=email] {
-      background: #1e1e1e;
-      color: var(--white);
-      border-color: #444;
-    }
-    .cta-block .email-form input[type=email]:focus { border-color: var(--accent); }
-    .cta-block .email-form button { background: var(--accent); border-color: var(--accent); color: var(--dark); }
-    .cta-block .email-form button:hover { background: var(--white); border-color: var(--white); color: var(--dark); }
-    .cta-block .form-note { color: #666; }
-    .cta-block .form-msg { color: #aaa; }
-
-    /* ── TOOL LIST ── */
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 1px;
-      background: var(--border);
-      margin-top: 2rem;
-    }
-    .tool-card {
-      background: var(--white);
-      padding: 1.6rem 1.2rem;
-    }
-    .tool-card .num {
-      font-family: "DM Mono", monospace;
-      font-size: .75rem;
-      color: var(--muted);
-    }
-    .tool-card h3 {
-      font-family: "Bebas Neue", sans-serif;
-      font-size: 1.7rem;
-      margin-top: .6rem;
-    }
-    .tool-card p {
-      font-size: 1rem;
-      color: var(--mid);
-      margin-top: .4rem;
-    }
-    .tool-card .accent-line {
-      width: 32px;
-      height: 3px;
-      background: var(--accent);
-      margin-top: .8rem;
+      object-fit: contain;
+      filter: drop-shadow(0 30px 60px rgba(0,0,0,0.12));
     }
 
-    /* ── BUILDS ── */
-    .builds-grid {
+    /* ─── FEATURE ROW ─── */
+    .feature {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: var(--border);
-      margin-top: 2rem;
+      gap: 4rem;
+      align-items: center;
+      padding: 7rem 6vw;
     }
+
+    .feature.reverse { background: #f7f6f2; }
+    .feature.reverse .feature-img { order: 1; }
+    .feature.reverse .feature-text { order: 2; }
+
+    .feature-img img {
+      width: 100%;
+      max-width: 480px;
+      object-fit: contain;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1));
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #c9a830;
+      margin-bottom: 1rem;
+    }
+
+    .section-h {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(3rem, 6vw, 6rem);
+      line-height: 0.88;
+      color: #111;
+    }
+
+    .section-p {
+      margin-top: 1.2rem;
+      font-size: clamp(1rem, 1.3vw, 1.15rem);
+      color: #555;
+      max-width: 42ch;
+      line-height: 1.7;
+    }
+
+    .feature-bullets {
+      margin-top: 1.8rem;
+      display: grid;
+      gap: 0.7rem;
+      list-style: none;
+    }
+
+    .feature-bullets li {
+      font-size: 1rem;
+      color: #444;
+      padding-left: 1.2rem;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .feature-bullets li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 6px;
+      height: 6px;
+      background: #c9a830;
+      border-radius: 50%;
+    }
+
+    /* ─── DARK CTA BAND ─── */
+    .cta-band {
+      background: #111;
+      color: #fff;
+      padding: 7rem 6vw;
+      text-align: center;
+    }
+
+    .cta-band .section-label { color: #c9a830; }
+    .cta-band .section-h { color: #fff; font-size: clamp(3.5rem, 8vw, 8rem); }
+    .cta-band .section-h .gold { color: #c9a830; }
+    .cta-band .section-p { color: #888; margin-left: auto; margin-right: auto; }
+
+    .cta-band .email-row {
+      max-width: 480px;
+      margin: 2.4rem auto 0;
+    }
+
+    .cta-band .email-row input {
+      background: #1e1e1e;
+      color: #fff;
+      border-color: #333;
+    }
+
+    .cta-band .email-row input:focus { border-color: #c9a830; }
+    .cta-band .email-row button { background: #c9a830; border-color: #c9a830; color: #111; }
+    .cta-band .email-row button:hover { background: #fff; border-color: #fff; color: #111; }
+    .cta-band .cta-sub { color: #555; }
+    .cta-band .form-msg { color: #666; }
+
+    /* ─── TOOLS LIST ─── */
+    .tools-section {
+      background: #f7f6f2;
+      padding: 7rem 6vw;
+    }
+
+    .tools-list {
+      margin-top: 3rem;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2rem;
+    }
+
+    .tool-item .num {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      color: #c9a830;
+      text-transform: uppercase;
+    }
+
+    .tool-item h3 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.8rem;
+      margin-top: 0.5rem;
+      color: #111;
+    }
+
+    .tool-item p {
+      margin-top: 0.4rem;
+      font-size: 0.92rem;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .tool-divider {
+      width: 30px;
+      height: 2px;
+      background: #c9a830;
+      margin-top: 0.8rem;
+    }
+
+    /* ─── BUILDS ─── */
+    .builds-section { padding: 7rem 6vw; }
+
+    .builds-grid {
+      margin-top: 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
     .build-card {
-      background: var(--white);
-      padding: 2rem;
+      background: #f7f6f2;
+      padding: 2.5rem;
     }
+
     .build-card img {
       width: 100%;
-      max-height: 200px;
+      max-height: 220px;
       object-fit: contain;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.6rem;
+      filter: drop-shadow(0 10px 30px rgba(0,0,0,0.08));
     }
+
+    .build-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      color: #c9a830;
+      text-transform: uppercase;
+    }
+
     .build-card h3 {
       font-family: "Bebas Neue", sans-serif;
-      font-size: 2.2rem;
+      font-size: 2.5rem;
+      color: #111;
+      margin-top: 0.3rem;
     }
-    .build-card p { color: var(--mid); margin-top: .5rem; font-size: 1.05rem; }
-    .build-card a {
-      display: inline-block;
-      margin-top: 1.2rem;
-      background: var(--dark);
-      color: var(--white);
-      font-family: "Bebas Neue", sans-serif;
-      font-size: 1.1rem;
-      letter-spacing: .06em;
-      padding: .7rem 1.6rem;
-      border: 2px solid var(--dark);
-      transition: .2s;
-    }
-    .build-card a:hover { background: var(--accent); border-color: var(--accent); color: var(--dark); }
 
-    /* ── FOOTER ── */
-    .footer {
-      background: var(--dark);
-      color: var(--white);
-      padding: 1.4rem 2rem;
+    .build-card p {
+      margin-top: 0.6rem;
+      font-size: 0.95rem;
+      color: #666;
+      line-height: 1.65;
     }
-    .footer .inner {
-      max-width: 1200px;
-      margin: 0 auto;
+
+    .build-cta {
+      display: inline-block;
+      margin-top: 1.6rem;
+      background: #111;
+      color: #fff;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.06em;
+      padding: 0.75rem 2rem;
+      transition: 0.2s;
+    }
+
+    .build-cta:hover { background: #c9a830; color: #111; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #111;
+      color: #fff;
+      padding: 2rem 6vw;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-family: "DM Mono", monospace;
-      font-size: .75rem;
-      color: #777;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
-    .footer .logo { color: var(--white); }
 
-    /* ── ANIMATIONS ── */
-    .fade-up {
+    footer .copy { font-size: 0.8rem; color: #555; }
+    footer a { font-size: 0.8rem; color: #c9a830; }
+
+    /* ─── ANIMATIONS ─── */
+    .fade {
       opacity: 0;
-      transform: translateY(20px);
-      transition: opacity .7s, transform .7s;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
-    .fade-up.show { opacity: 1; transform: none; }
-    .stagger { opacity: 0; transform: translateY(16px); animation: rise .7s forwards; }
-    .s1 { animation-delay: .1s; }
-    .s2 { animation-delay: .25s; }
-    .s3 { animation-delay: .4s; }
-    .s4 { animation-delay: .55s; }
-    @keyframes rise { to { opacity: 1; transform: none; } }
+    .fade.visible { opacity: 1; transform: none; }
 
-    /* ── RESPONSIVE ── */
+    /* ─── RESPONSIVE ─── */
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; }
-      .hero-img { min-height: 320px; border-left: none; border-top: 1px solid var(--border); }
-      .hero-text { padding: 3rem 1.5rem 2rem; }
-      .feature-row { grid-template-columns: 1fr; }
-      .feature-row .feature-img { min-height: 280px; }
-      .feature-row.flip .feature-text { order: 1; }
-      .feature-row.flip .feature-img { order: 2; }
-      .tools-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-text { padding: 3rem 6vw 2.5rem; order: 2; }
+      .hero-visual { order: 1; min-height: 55vw; padding: 2rem 6vw; }
+      .hero-visual img { max-width: 80vw; }
+
+      .feature { grid-template-columns: 1fr; gap: 2.5rem; padding: 5rem 6vw; }
+      .feature.reverse .feature-img { order: 2; }
+      .feature.reverse .feature-text { order: 1; }
+
+      .tools-list { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
       .builds-grid { grid-template-columns: 1fr; }
-      .email-form { flex-direction: column; }
-      .email-form input[type=email] { border-right: 2px solid var(--dark); border-bottom: none; }
-      .email-form button { border-top: none; }
     }
+
     @media (max-width: 560px) {
-      .tools-grid { grid-template-columns: 1fr; }
-      .nav-cta { display: none; }
+      .email-row { flex-direction: column; height: auto; }
+      .email-row input { height: 54px; border-right: 2px solid #111; border-bottom: none; }
+      .email-row input:focus { border-color: #c9a830; }
+      .email-row button { height: 54px; border-top: none; }
+      .cta-band .email-row input { border-color: #333; }
+      .tools-list { grid-template-columns: 1fr; }
+      nav .nav-btn { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav class="nav" id="nav">
-    <div class="nav-inner">
-      <div class="logo">GE<span>O</span>EDC</div>
-      <a class="nav-cta" href="#early-access">GET EARLY ACCESS</a>
-    </div>
-  </nav>
+<!-- NAV -->
+<nav>
+  <div class="logo">GE<span class="o">O</span>EDC</div>
+  <a class="nav-btn" href="#cta-hero">RESERVE NOW</a>
+</nav>
 
-  <!-- TICKER -->
-  <div class="ticker">
-    <div class="ticker-track">
-      5 Tools. One Rotation. &nbsp;///&nbsp; One-Hand Deployment &nbsp;///&nbsp; Kickstarter Coming Soon &nbsp;///&nbsp; Aluminum &amp; Titanium Builds &nbsp;///&nbsp; Swiss EDC Precision &nbsp;///&nbsp;
-      5 Tools. One Rotation. &nbsp;///&nbsp; One-Hand Deployment &nbsp;///&nbsp; Kickstarter Coming Soon &nbsp;///&nbsp; Aluminum &amp; Titanium Builds &nbsp;///&nbsp; Swiss EDC Precision &nbsp;///&nbsp;
-    </div>
-  </div>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <div class="hero-kicker">EDC Multitool — Kickstarter Coming Soon</div>
+    <h1>5 TOOLS.<br><span class="line2">ONE<br>ROTATION.</span></h1>
+    <p class="hero-desc">The ultimate compact multi-tool. Precision-built, pocket-sized — deployed with a single finger.</p>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-text wrapper-pad">
-      <div class="eyebrow stagger s1">// EDC MULTITOOL — PRE-LAUNCH</div>
-      <h1 class="stagger s2">5 TOOLS.<br><em>ONE<br>ROTATION.</em></h1>
-      <p class="hero-sub stagger s3">The ultimate compact multi-tool. Precision-built, pocket-sized — deployed with a single finger rotation.</p>
-
-      <div class="incentive-badge stagger s3">
-        <span>$1.99 DEPOSIT</span> — LOCKS IN EARLY BIRD PRICING. FINAL RETAIL $75–$100.
-      </div>
-
-      <form class="email-form stagger s4" id="hero-form" novalidate>
-        <input type="email" id="hero-email" placeholder="YOUR EMAIL ADDRESS" required />
+    <div class="cta-box" id="cta-hero">
+      <div class="cta-incentive">Early Bird — <span>Lock In Your Price Now</span></div>
+      <div class="cta-value">$1.99 DEPOSIT<br>SAVES YOUR SPOT</div>
+      <form class="email-row" id="form-hero" novalidate>
+        <input type="email" id="email-hero" placeholder="Enter your email" required />
         <button type="submit">GET EARLY ACCESS</button>
       </form>
-      <div class="form-note">No spam. One email when we launch.</div>
-      <div class="form-msg" id="hero-msg"></div>
-    </div>
-
-    <div class="hero-img">
-      <img src="Aluminum.png" alt="GEOEDC Multitool – Aluminum Edition" onerror="this.parentElement.innerHTML='<div class=\'img-placeholder\'><svg width=\'64\' height=\'64\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'#999\' stroke-width=\'1.5\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M12 6v6l4 2\'/></svg><span>PRODUCT BEAUTY SHOT<br>Coming Soon</span></div>'" />
-    </div>
-  </section>
-
-  <!-- FEATURE 1: One-Hand Operation -->
-  <div class="section-full">
-    <div class="inner">
-      <div class="feature-row">
-        <div class="feature-img">
-          <img src="Aluminum.png" alt="One-hand deployment" onerror="this.style.display='none'" />
-        </div>
-        <div class="feature-text fade-up">
-          <div class="eyebrow">// FEATURE 01</div>
-          <h2>ONE FINGER.<br>FULL CONTROL.</h2>
-          <p>Deploy all five tools with a single circular rotation. No fumbling, no unfolding — just instant access, every time.</p>
-        </div>
-      </div>
-
-      <div class="feature-row flip">
-        <div class="feature-text fade-up">
-          <div class="eyebrow">// FEATURE 02</div>
-          <h2>FIVE TOOLS.<br>ZERO BULK.</h2>
-          <p>Blade, bottle opener, wire cutter, screwdriver/pry, and box opener — all packed into a disc that fits flat in your pocket.</p>
-          <div style="margin-top:1.2rem; display:grid; gap:.5rem;">
-            <div>— Precision blade for clean everyday cuts</div>
-            <div>— Bottle opener with one-hand leverage</div>
-            <div>— Wire cutter for field adjustments</div>
-            <div>— Flat-head screwdriver / pry tool</div>
-            <div>— Safe box-opening geometry</div>
-          </div>
-        </div>
-        <div class="feature-img">
-          <img src="Titaniium.png" alt="Five tools" onerror="this.style.display='none'" />
-        </div>
-      </div>
+      <div class="cta-sub">Final retail $75–$100. Early backers pay less — guaranteed.</div>
+      <div class="form-msg" id="msg-hero"></div>
     </div>
   </div>
 
-  <!-- MID CTA -->
-  <div class="cta-block" id="early-access">
-    <h2>BE FIRST.<br><em>SAVE NOW.</em></h2>
-    <p>Lock in your early-bird spot before we launch on Kickstarter. $1.99 reserves your place in the first production run.</p>
-    <form class="email-form" id="mid-form" novalidate>
-      <input type="email" id="mid-email" placeholder="YOUR EMAIL ADDRESS" required />
-      <button type="submit">RESERVE NOW</button>
-    </form>
-    <div class="form-note">Early bird pricing — final retail $75–$100</div>
-    <div class="form-msg" id="mid-msg"></div>
+  <div class="hero-visual">
+    <img src="Aluminum.png" alt="GEOEDC Multitool" />
   </div>
+</div>
 
-  <!-- FEATURE 3: Built to Last -->
-  <div class="section-full">
-    <div class="inner">
-      <div class="feature-row">
-        <div class="feature-img">
-          <img src="Titaniium.png" alt="Titanium build" onerror="this.style.display='none'" />
-        </div>
-        <div class="feature-text fade-up">
-          <div class="eyebrow">// FEATURE 03</div>
-          <h2>BUILT TO<br>LAST A<br>LIFETIME.</h2>
-          <p>Choose between brushed aluminum for everyday carry or premium titanium for maximum strength-to-weight. Both built around stainless steel internals.</p>
-        </div>
-      </div>
+<!-- FEATURE 1 -->
+<div class="feature fade">
+  <div class="feature-img">
+    <img src="Aluminum.png" alt="One hand operation" />
+  </div>
+  <div class="feature-text">
+    <div class="section-label">Feature 01</div>
+    <h2 class="section-h">ONE FINGER.<br>FULL CONTROL.</h2>
+    <p class="section-p">Every tool deploys with a single circular rotation. No fumbling. No unfolding. Just instant, one-handed access — every single time.</p>
+  </div>
+</div>
+
+<!-- DARK CTA 1 -->
+<div class="cta-band fade">
+  <div class="section-label">Early Access — First Production Run</div>
+  <h2 class="section-h">BE FIRST.<br><span class="gold">SAVE NOW.</span></h2>
+  <p class="section-p">Lock in your early-bird spot before Kickstarter launches. First production run is limited.</p>
+  <form class="email-row" id="form-mid" novalidate>
+    <input type="email" id="email-mid" placeholder="Enter your email" required />
+    <button type="submit">RESERVE FOR $1.99</button>
+  </form>
+  <div class="cta-sub">No spam. One email when we launch.</div>
+  <div class="form-msg" id="msg-mid"></div>
+</div>
+
+<!-- FEATURE 2 -->
+<div class="feature reverse fade">
+  <div class="feature-text">
+    <div class="section-label">Feature 02</div>
+    <h2 class="section-h">FIVE TOOLS.<br>ZERO BULK.</h2>
+    <p class="section-p">Everything you reach for — in a disc that sits flat in your pocket.</p>
+    <ul class="feature-bullets">
+      <li>Precision blade for everyday cuts</li>
+      <li>Bottle opener with one-hand leverage</li>
+      <li>Wire cutter for field adjustments</li>
+      <li>Flat-head screwdriver &amp; pry tool</li>
+      <li>Safe box-opening geometry</li>
+    </ul>
+  </div>
+  <div class="feature-img">
+    <img src="Titaniium.png" alt="Five tools" />
+  </div>
+</div>
+
+<!-- FEATURE 3 -->
+<div class="feature fade">
+  <div class="feature-img">
+    <img src="Titaniium.png" alt="Built to last" />
+  </div>
+  <div class="feature-text">
+    <div class="section-label">Feature 03</div>
+    <h2 class="section-h">BUILT TO<br>LAST A<br>LIFETIME.</h2>
+    <p class="section-p">Choose brushed aluminum for everyday carry or premium titanium for maximum strength-to-weight. Both built on stainless steel internals that won't quit.</p>
+  </div>
+</div>
+
+<!-- TOOLS -->
+<div class="tools-section fade">
+  <div class="section-label">All 5 Tools</div>
+  <h2 class="section-h">EVERYTHING<br>YOU NEED.</h2>
+  <div class="tools-list">
+    <div class="tool-item">
+      <div class="num">01</div>
+      <h3>BLADE</h3>
+      <p>Precision edge for clean everyday cuts.</p>
+      <div class="tool-divider"></div>
+    </div>
+    <div class="tool-item">
+      <div class="num">02</div>
+      <h3>BOTTLE OPENER</h3>
+      <p>One-hand leverage, engineered clean.</p>
+      <div class="tool-divider"></div>
+    </div>
+    <div class="tool-item">
+      <div class="num">03</div>
+      <h3>WIRE CUTTER</h3>
+      <p>Compact snip for quick field adjustments.</p>
+      <div class="tool-divider"></div>
+    </div>
+    <div class="tool-item">
+      <div class="num">04</div>
+      <h3>SCREWDRIVER</h3>
+      <p>Flat-head doubles as a micro pry tool.</p>
+      <div class="tool-divider"></div>
+    </div>
+    <div class="tool-item">
+      <div class="num">05</div>
+      <h3>BOX OPENER</h3>
+      <p>Safe geometry. Controlled, quick cuts.</p>
+      <div class="tool-divider"></div>
     </div>
   </div>
+</div>
 
-  <!-- TOOLS BREAKDOWN -->
-  <section class="section fade-up">
-    <div class="eyebrow">// 5 TOOLS</div>
-    <h2 style="font-family:'Bebas Neue',sans-serif; font-size:clamp(2.5rem,6vw,4.5rem); margin-top:.4rem;">EVERYTHING YOU NEED.</h2>
-    <div class="tools-grid">
-      <div class="tool-card">
-        <div class="num">01</div>
-        <h3>BLADE</h3>
-        <p>Precision edge for quick everyday cuts and controlled utility work.</p>
-        <div class="accent-line"></div>
-      </div>
-      <div class="tool-card">
-        <div class="num">02</div>
-        <h3>BOTTLE OPENER</h3>
-        <p>Leverage notch engineered for clean cap lift with one-hand stability.</p>
-        <div class="accent-line"></div>
-      </div>
-      <div class="tool-card">
-        <div class="num">03</div>
-        <h3>WIRE CUTTER</h3>
-        <p>Compact snip profile for thin wires, ties, and quick field adjustments.</p>
-        <div class="accent-line"></div>
-      </div>
-      <div class="tool-card">
-        <div class="num">04</div>
-        <h3>SCREWDRIVER / PRY</h3>
-        <p>Flat-head edge doubles as micro pry tool for stubborn lids and clips.</p>
-        <div class="accent-line"></div>
-      </div>
-      <div class="tool-card">
-        <div class="num">05</div>
-        <h3>BOX OPENER</h3>
-        <p>Safe package-opening geometry that keeps cuts controlled and quick.</p>
-        <div class="accent-line"></div>
-      </div>
+<!-- CHOOSE YOUR BUILD -->
+<div class="builds-section fade">
+  <div class="section-label">Two Builds</div>
+  <h2 class="section-h">CHOOSE<br>YOUR BUILD.</h2>
+  <div class="builds-grid">
+    <div class="build-card">
+      <img src="Aluminum.png" alt="Aluminum Edition" />
+      <div class="build-tag">Version 01</div>
+      <h3>ALUMINUM</h3>
+      <p>Brushed aluminum shell over stainless steel internals. Lighter carry weight, corrosion-resistant, built for everyday.</p>
+      <a class="build-cta" href="eclipso-preorder.html?version=v1">RESERVE V1 — $1.99</a>
     </div>
-  </section>
-
-  <!-- CHOOSE YOUR BUILD -->
-  <div class="section-full">
-    <div class="inner fade-up">
-      <div class="eyebrow">// TWO BUILDS</div>
-      <h2 style="font-family:'Bebas Neue',sans-serif; font-size:clamp(2.5rem,6vw,4.5rem); margin-top:.4rem;">CHOOSE YOUR BUILD.</h2>
-      <div class="builds-grid">
-        <div class="build-card">
-          <img src="Aluminum.png" alt="Aluminum Edition" onerror="this.style.display='none'" />
-          <div class="eyebrow">VERSION 01</div>
-          <h3>ALUMINUM EDITION</h3>
-          <p>Stainless steel internals, brushed aluminum shell. Lighter daily carry weight, corrosion-resistant finish.</p>
-          <a href="eclipso-preorder.html?version=v1">RESERVE V1 — $1.99</a>
-        </div>
-        <div class="build-card">
-          <img src="Titaniium.png" alt="Titanium Edition" onerror="this.style.display='none'" />
-          <div class="eyebrow">VERSION 02</div>
-          <h3>TITANIUM EDITION</h3>
-          <p>Stainless steel internals, premium titanium shell. Maximum strength-to-weight ratio, high-end tactical finish.</p>
-          <a href="eclipso-preorder.html?version=v2">RESERVE V2 — $1.99</a>
-        </div>
-      </div>
+    <div class="build-card">
+      <img src="Titaniium.png" alt="Titanium Edition" />
+      <div class="build-tag">Version 02</div>
+      <h3>TITANIUM</h3>
+      <p>Premium titanium shell. Maximum strength-to-weight ratio. High-end tactical finish for those who want the best.</p>
+      <a class="build-cta" href="eclipso-preorder.html?version=v2">RESERVE V2 — $1.99</a>
     </div>
   </div>
+</div>
 
-  <!-- BOTTOM CTA -->
-  <div class="cta-block">
-    <h2>DON'T MISS<br><em>LAUNCH PRICING.</em></h2>
-    <p>Join the list now. First production run is limited. Early backers pay less — guaranteed.</p>
-    <form class="email-form" id="bottom-form" novalidate>
-      <input type="email" id="bottom-email" placeholder="YOUR EMAIL ADDRESS" required />
-      <button type="submit">LOCK IN EARLY ACCESS</button>
-    </form>
-    <div class="form-note">No spam. Unsubscribe anytime.</div>
-    <div class="form-msg" id="bottom-msg"></div>
-  </div>
+<!-- FINAL CTA -->
+<div class="cta-band fade">
+  <div class="section-label">Don't Miss Launch Pricing</div>
+  <h2 class="section-h">LOCK YOUR<br><span class="gold">SPOT TODAY.</span></h2>
+  <p class="section-p">Join the first production run. Early backers always pay less — and ship before retail.</p>
+  <form class="email-row" id="form-bottom" novalidate>
+    <input type="email" id="email-bottom" placeholder="Enter your email" required />
+    <button type="submit">LOCK IN EARLY ACCESS</button>
+  </form>
+  <div class="cta-sub">No spam. Unsubscribe anytime.</div>
+  <div class="form-msg" id="msg-bottom"></div>
+</div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="inner">
-      <div class="logo">GE<span style="color:var(--accent)">O</span>EDC</div>
-      <div>&copy; 2026 GEOEDC. All rights reserved.</div>
-      <a href="eclipso-preorder.html" style="color:var(--accent)">COMING TO KICKSTARTER &rarr;</a>
-    </div>
-  </footer>
+<!-- FOOTER -->
+<footer>
+  <div class="logo">GE<span class="o">O</span>EDC</div>
+  <span class="copy">&copy; 2026 GEOEDC. All rights reserved.</span>
+  <a href="eclipso-preorder.html">Coming to Kickstarter &rarr;</a>
+</footer>
 
-  <script>
-    const BACKEND_URL = "https://eclipso-production.up.railway.app";
+<script>
+  const BACKEND = "https://eclipso-production.up.railway.app";
 
-    function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
 
-    // Nav scroll shadow
-    const nav = document.getElementById("nav");
-    window.addEventListener("scroll", () => {
-      nav.classList.toggle("scrolled", window.scrollY > 10);
-    });
+  async function submit(emailId, msgId) {
+    const email = document.getElementById(emailId).value.trim();
+    const msg   = document.getElementById(msgId);
 
-    // Scroll reveal
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("show"); });
-    }, { threshold: 0.15 });
-    document.querySelectorAll(".fade-up").forEach(el => observer.observe(el));
-
-    // Shared submit handler
-    async function handleSubmit(emailId, msgId, e) {
-      e.preventDefault();
-      const email = document.getElementById(emailId).value.trim();
-      const msg = document.getElementById(msgId);
-
-      if (!isEmail(email)) {
-        msg.style.color = "var(--red)";
-        msg.textContent = "Please enter a valid email address.";
-        return;
-      }
-
-      msg.style.color = "inherit";
-      msg.textContent = "Saving your spot...";
-
-      try {
-        const res = await fetch(`${BACKEND_URL}/signup`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, source: "landing" })
-        });
-        if (!res.ok) throw new Error();
-        msg.textContent = "Taking you to your reservation...";
-        window.location.href = `eclipso-preorder.html?email=${encodeURIComponent(email)}`;
-      } catch {
-        // Offline — go direct
-        window.location.href = `eclipso-preorder.html?email=${encodeURIComponent(email)}`;
-      }
+    if (!validEmail(email)) {
+      msg.style.color = "#c0392b";
+      msg.textContent = "Please enter a valid email address.";
+      return;
     }
 
-    document.getElementById("hero-form").addEventListener("submit", e => handleSubmit("hero-email", "hero-msg", e));
-    document.getElementById("mid-form").addEventListener("submit", e => handleSubmit("mid-email", "mid-msg", e));
-    document.getElementById("bottom-form").addEventListener("submit", e => handleSubmit("bottom-email", "bottom-msg", e));
-  </script>
+    msg.style.color = "#888";
+    msg.textContent = "Saving your spot...";
+
+    try {
+      await fetch(`${BACKEND}/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "landing" })
+      });
+    } catch (_) {}
+
+    window.location.href = `eclipso-preorder.html?email=${encodeURIComponent(email)}`;
+  }
+
+  document.getElementById("form-hero").addEventListener("submit",   e => { e.preventDefault(); submit("email-hero",   "msg-hero"); });
+  document.getElementById("form-mid").addEventListener("submit",    e => { e.preventDefault(); submit("email-mid",    "msg-mid"); });
+  document.getElementById("form-bottom").addEventListener("submit", e => { e.preventDefault(); submit("email-bottom", "msg-bottom"); });
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => { if (en.isIntersecting) en.target.classList.add("visible"); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".fade").forEach(el => io.observe(el));
+</script>
 </body>
 </html>
