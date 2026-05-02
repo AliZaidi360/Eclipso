@@ -14,8 +14,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
 });
 
 const PRICE_MAP = {
-  v1: { cents: 199, label: "$1.99" },
-  v2: { cents: 199, label: "$1.99" }
+  v1: { cents: 99, label: "$0.99" },
+  v2: { cents: 99, label: "$0.99" }
 };
 
 const REQUIRED_ENVS = [
