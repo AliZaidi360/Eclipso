@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" width="600" height="240">
+  <rect width="600" height="240" fill="#000"/>
+  <text
+    x="50%"
+    y="50%"
+    dominant-baseline="central"
+    text-anchor="middle"
+    font-family="'Arial Black', 'Helvetica Neue', sans-serif"
+    font-weight="900"
+    font-size="180"
+    fill="#fff"
+    letter-spacing="-4"
+  >GEO</text>
+</svg>
