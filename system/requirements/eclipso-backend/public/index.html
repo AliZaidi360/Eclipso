@@ -422,31 +422,71 @@
     footer .copy { font-size: 0.78rem; color: #555; }
     footer a { font-size: 0.78rem; color: #c9a830; }
 
-    /* RESPONSIVE */
+    /* RESPONSIVE — TABLET (max 900px) */
     @media (max-width: 900px) {
+      /* Hero stacks: image on top, text below */
       .hero { grid-template-columns: 1fr; }
-      .hero-visual { order: -1; min-height: 52vw; }
-      .hero-text { padding: 3rem 6vw; }
+      .hero-visual {
+        order: -1;
+        min-height: 60vw;
+        max-height: 420px;
+        padding: 2.5rem 8vw;
+      }
+      .hero-visual img { max-width: 340px; }
+      .hero-text { padding: 2.5rem 6vw 3rem; }
+      .hero h1 { font-size: clamp(4rem, 12vw, 7rem); }
+      .cta-box { padding: 1.4rem; }
 
-      .feature { grid-template-columns: 1fr; min-height: auto; }
-      .feature.flip { grid-template-columns: 1fr; }
-      .feature.flip .feat-img { order: -1; }
-      .feature.flip .feat-text { order: 1; }
-      .feat-img { min-height: 320px; }
-      .feat-text { padding: 3rem 6vw; }
+      /* Features: image on top, text below — always */
+      .feature, .feature.flip { grid-template-columns: 1fr; min-height: auto; }
+      .feat-img { min-height: 55vw; max-height: 400px; order: -1 !important; }
+      .feat-text { order: 1 !important; padding: 2.5rem 6vw; }
 
-      .tools-grid { grid-template-columns: repeat(2, 1fr); }
-      .builds-grid { grid-template-columns: 1fr; }
+      /* CTA bands */
+      .cta-band { padding: 5rem 6vw; }
+      .cta-band h2 { font-size: clamp(3rem, 10vw, 6rem); }
+
+      /* Tools 2 columns */
+      .tools { padding: 4rem 6vw; }
+      .tools-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+
+      /* Builds single column */
+      .builds { padding: 4rem 6vw; }
+      .builds-grid { grid-template-columns: 1fr; max-width: 480px; }
     }
 
+    /* RESPONSIVE — PHONE (max 560px) */
     @media (max-width: 560px) {
-      .email-row { flex-direction: column; height: auto; }
-      .email-row input { height: 50px; border-right: 2px solid #111; border-bottom: none; }
-      .email-row input:focus { border-color: #c9a830; }
-      .email-row button { height: 50px; border-top: none; }
-      .cta-band .email-row input { border-color: #333; }
-      .tools-grid { grid-template-columns: 1fr; }
       nav .nav-btn { display: none; }
+
+      .hero-visual { min-height: 70vw; max-height: 340px; padding: 2rem 6vw; }
+      .hero-visual img { max-width: 280px; }
+      .hero h1 { font-size: clamp(3.5rem, 14vw, 5.5rem); }
+      .hero-desc { font-size: 1rem; }
+
+      .feat-img { min-height: 70vw; max-height: 300px; }
+      .feat-text h2 { font-size: clamp(2.4rem, 10vw, 3.5rem); }
+
+      .email-row { flex-direction: column; height: auto; }
+      .email-row input {
+        height: 52px;
+        border-right: 2px solid #111;
+        border-bottom: none;
+        border-radius: 0;
+      }
+      .email-row input:focus { border-color: #c9a830; }
+      .email-row button { height: 52px; border-top: none; width: 100%; }
+      .cta-band .email-row input { border-color: #333; }
+
+      .tools { padding: 3rem 6vw; }
+      .tools-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+
+      .builds { padding: 3rem 6vw; }
+      .builds-grid { max-width: 100%; }
+
+      .cta-band { padding: 4rem 6vw; }
+
+      footer { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     }
   </style>
 </head>
