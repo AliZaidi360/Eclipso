@@ -222,6 +222,7 @@
     label input:focus { border-color: var(--dark); }
 
     .submit-btn {
+      display: block;
       width: 100%;
       padding: 1.1rem;
       background: var(--dark);
@@ -233,9 +234,10 @@
       cursor: pointer;
       transition: .2s;
       margin-top: .4rem;
+      text-align: center;
+      text-decoration: none;
     }
     .submit-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--dark); }
-    .submit-btn:disabled { opacity: .6; cursor: wait; }
 
     .security-row {
       display: flex;
@@ -346,32 +348,22 @@
 
   <!-- RIGHT: Form -->
   <main class="panel-right">
-    <div class="eyebrow">// STEP 2 OF 3 — RESERVE YOUR BUILD</div>
+    <div class="eyebrow">STEP 2 OF 3 — CHOOSE YOUR BUILD</div>
     <h1>LOCK YOUR<br>SPOT.</h1>
-    <p class="subtitle">Confirm your email and choose your build. You'll be taken to payment to complete your $0.99 reservation.</p>
+    <p class="subtitle">Choose your build on the left, then secure your spot for $0.99. Full price charged at Kickstarter launch — backers pay less.</p>
 
     <div class="incentive">
       <em>EARLY BIRD PRICING</em> — Final retail: $75–$100. You pay less as a backer.
     </div>
 
-    <form class="reserve-form" id="reserve-form" novalidate>
-      <label>
-        Email Address
-        <input type="email" id="email" placeholder="you@example.com" required />
-      </label>
-      <label>
-        Full Name
-        <input type="text" id="name" placeholder="Your full name" required />
-      </label>
-
-      <button class="submit-btn" type="submit" id="submit-btn">PROCEED TO PAYMENT — $0.99</button>
+    <div class="reserve-form">
+      <a class="submit-btn" id="proceed-btn" href="eclipso-payment.html">SECURE NOW — $0.99</a>
       <div class="security-row">
         <span>&#128274; SSL Secured</span>
         <span>Powered by Stripe</span>
         <span>No hidden fees</span>
       </div>
-      <div id="form-msg"></div>
-    </form>
+    </div>
 
     <!-- FAQs -->
     <div class="faq">
@@ -423,14 +415,23 @@
 
 <script>
   let selectedVersion = "v1";
+  let emailParam = "";
 
-  // Pre-fill from URL params
+  function updateBtn() {
+    const btn = document.getElementById("proceed-btn");
+    const params = new URLSearchParams();
+    if (emailParam) params.set("email", emailParam);
+    params.set("version", selectedVersion);
+    btn.href = `eclipso-payment.html?${params.toString()}`;
+  }
+
   window.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("email")) document.getElementById("email").value = params.get("email");
+    emailParam = params.get("email") || "";
 
     const v = params.get("version");
     if (v === "v2") setVersion("v2");
+    else updateBtn();
   });
 
   function setVersion(v) {
@@ -438,45 +439,16 @@
     document.getElementById("btn-v1").classList.toggle("active", v === "v1");
     document.getElementById("btn-v2").classList.toggle("active", v === "v2");
     document.getElementById("product-img").src = v === "v1" ? "Aluminum.png" : "Titaniium.png";
+    updateBtn();
   }
 
   document.getElementById("btn-v1").addEventListener("click", () => setVersion("v1"));
   document.getElementById("btn-v2").addEventListener("click", () => setVersion("v2"));
 
-  // FAQ accordion
   document.querySelectorAll(".faq-q").forEach(q => {
     q.addEventListener("click", () => {
-      const item = q.closest(".faq-item");
-      item.classList.toggle("open");
+      q.closest(".faq-item").classList.toggle("open");
     });
-  });
-
-  // Form submit → go to payment page
-  document.getElementById("reserve-form").addEventListener("submit", e => {
-    e.preventDefault();
-    const email = document.getElementById("email").value.trim();
-    const name = document.getElementById("name").value.trim();
-    const msg = document.getElementById("form-msg");
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      msg.style.color = "#c0392b";
-      msg.textContent = "Please enter a valid email address.";
-      return;
-    }
-    if (!name) {
-      msg.style.color = "#c0392b";
-      msg.textContent = "Please enter your full name.";
-      return;
-    }
-
-    msg.style.color = "#777";
-    msg.textContent = "Taking you to secure payment...";
-
-    const btn = document.getElementById("submit-btn");
-    btn.disabled = true;
-    btn.textContent = "REDIRECTING...";
-
-    window.location.href = `eclipso-payment.html?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&version=${selectedVersion}`;
   });
 </script>
 </body>
