@@ -206,6 +206,7 @@
       height: 100%;
       min-height: 480px;
       overflow: hidden;
+      background: #f4f3ef;
     }
 
     .feature-img img,
@@ -434,10 +435,11 @@
 
       .feature { grid-template-columns: 1fr; }
       .feature.reverse { grid-template-columns: 1fr; }
-      .feature-img { min-height: 300px; }
+      .feature-img { min-height: 320px; background: #f4f3ef; }
+      .feature-img img, .feature-img video { object-fit: contain; padding: 2rem; }
       .feature.reverse .feature-img { order: 1; }
       .feature.reverse .feature-text { order: 2; }
-      .feature-text { padding: 3rem 6vw; }
+      .feature-text { padding: 2.5rem 6vw; }
 
       .tools-list { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
       .builds-grid { grid-template-columns: 1fr; }
