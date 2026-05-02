@@ -158,7 +158,11 @@ app.use(express.json());
 const path = require("path");
 
 // Serve static files from the public directory
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public"), {
+  setHeaders(res, filePath) {
+    if (filePath.endsWith(".mp4")) res.setHeader("Content-Type", "video/mp4");
+  }
+}));
 
 // Send users to the landing page when they visit the exact root URL
 app.get("/", (req, res) => {
