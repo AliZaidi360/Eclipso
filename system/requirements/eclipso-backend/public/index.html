@@ -169,7 +169,7 @@
 
     /* HERO IMAGE */
     .hero-visual {
-      background: #f4f3ef;
+      background: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -178,9 +178,9 @@
 
     .hero-visual img {
       width: 100%;
-      max-width: 500px;
+      max-width: 480px;
       object-fit: contain;
-      filter: drop-shadow(0 24px 48px rgba(0,0,0,0.13));
+      filter: drop-shadow(0 24px 48px rgba(0,0,0,0.10));
     }
 
     /* FEATURE SECTIONS */
@@ -199,7 +199,14 @@
       overflow: hidden;
     }
 
-    .feat-img img,
+    .feat-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      padding: 2rem;
+    }
+
     .feat-img video {
       width: 100%;
       height: 100%;
@@ -323,7 +330,8 @@
       max-height: 200px;
       object-fit: contain;
       margin-bottom: 1.4rem;
-      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.08));
+      background: #fff;
+      padding: 1rem;
     }
 
     .build-tag {
@@ -381,13 +389,14 @@
       .hero { grid-template-columns: 1fr; }
       .hero-visual {
         order: -1;
-        min-height: 60vw;
-        max-height: 420px;
-        padding: 2.5rem 8vw;
+        min-height: 56vw;
+        max-height: 400px;
+        padding: 2rem 5vw;
       }
-      .hero-visual img { max-width: 340px; }
+      .hero-visual img { max-width: 100%; }
       .hero-text { padding: 2.5rem 6vw 3rem; }
       .hero h1 { font-size: clamp(4rem, 12vw, 7rem); }
+      .hero-kicker { font-size: 0.7rem; }
       .cta-box { padding: 1.4rem; }
 
       /* Features: image on top, text below — always */
@@ -407,12 +416,14 @@
     @media (max-width: 560px) {
       nav .nav-btn { font-size: 0.95rem; padding: 0.45rem 1rem; }
 
-      .hero-visual { min-height: 70vw; max-height: 340px; padding: 2rem 6vw; }
-      .hero-visual img { max-width: 280px; }
-      .hero h1 { font-size: clamp(3.5rem, 14vw, 5.5rem); }
-      .hero-desc { font-size: 1rem; }
+      .hero-visual { min-height: 62vw; max-height: 300px; padding: 1.5rem 4vw; }
+      .hero-visual img { max-width: 100%; }
+      .hero-kicker { font-size: 0.65rem; letter-spacing: 0.12em; }
+      .hero h1 { font-size: clamp(3.2rem, 13vw, 5rem); }
+      .hero-desc { font-size: 0.95rem; }
 
-      .feat-img { min-height: 70vw; max-height: 300px; }
+      .feat-img { min-height: 65vw; max-height: 280px; }
+      .feat-img img { padding: 1.5rem; }
       .feat-text h2 { font-size: clamp(2.4rem, 10vw, 3.5rem); }
 
       .email-row { flex-direction: column; height: auto; }
@@ -445,7 +456,7 @@
 <!-- HERO -->
 <div class="hero">
   <div class="hero-text">
-    <div class="hero-kicker">EDC Multitool — Kickstarter Coming Soon</div>
+    <div class="hero-kicker">EDC Multitool &mdash; Kickstarter&nbsp;Coming&nbsp;Soon</div>
     <h1>5 TOOLS.<br><span class="gold">ONE<br>ROTATION.</span></h1>
     <p class="hero-desc">The ultimate compact multi-tool. Precision-built, pocket-sized — deployed with a single finger.</p>
 
